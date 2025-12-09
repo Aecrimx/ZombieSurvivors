@@ -21,9 +21,6 @@ SomeClass *getC() {
 int main() {
     ///
     std::cout << "Hello, world!\n";
-    std::array<int, 100> v{};
-    int nr;
-    std::cout << "Introduceți nr: ";
     /////////////////////////////////////////////////////////////////////////
     /// Observație: dacă aveți nevoie să citiți date de intrare de la tastatură,
     /// dați exemple de date de intrare folosind fișierul tastatura.txt
@@ -44,17 +41,7 @@ int main() {
     /// program care merg (și să le evitați pe cele care nu merg).
     ///
     /////////////////////////////////////////////////////////////////////////
-    std::cin >> nr;
-    /////////////////////////////////////////////////////////////////////////
-    for(int i = 0; i < nr; ++i) {
-        std::cout << "v[" << i << "] = ";
-        std::cin >> v[i];
-    }
-    std::cout << "\n\n";
-    std::cout << "Am citit de la tastatură " << nr << " elemente:\n";
-    for(int i = 0; i < nr; ++i) {
-        std::cout << "- " << v[i] << "\n";
-    }
+
     ///////////////////////////////////////////////////////////////////////////
     /// Pentru date citite din fișier, NU folosiți tastatura.txt. Creați-vă voi
     /// alt fișier propriu cu ce alt nume doriți.
@@ -81,8 +68,10 @@ int main() {
     window.setVerticalSyncEnabled(true);                                    ///
     /// window.setFramerateLimit(60);                                       ///
     ///////////////////////////////////////////////////////////////////////////
-
+    sf::Vector2<float> pos = {100.f, 100.f};
     while(window.isOpen()) {
+
+
         bool shouldExit = false;
 
         while(const std::optional event = window.pollEvent()) {
@@ -107,10 +96,29 @@ int main() {
             std::cout << "Fereastra a fost închisă (shouldExit == true)\n";
             break;
         }
-        using namespace std::chrono_literals;
-        std::this_thread::sleep_for(300ms);
-
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::W)) {
+            pos.y -= 5.f;
+        }
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::S)) {
+            pos.y += 5.f;
+        }
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::A)) {
+            pos.x -= 5.f;
+        }
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::D)) {
+            pos.x += 5.f;
+        }
         window.clear();
+
+        sf::Texture texture("../test.png");
+        texture.setSmooth(true);
+        sf::Sprite sprite(texture);
+        sprite.setColor(sf::Color(0, 255, 0));
+
+        sprite.setPosition(pos);
+        window.draw(sprite);
+
+
         window.display();
     }
 
