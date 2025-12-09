@@ -18,6 +18,8 @@ SomeClass *getC() {
 //////////////////////////////////////////////////////////////////////
 
 
+
+
 int main() {
     ///
     std::cout << "Hello, world!\n";
@@ -69,6 +71,8 @@ int main() {
     /// window.setFramerateLimit(60);                                       ///
     ///////////////////////////////////////////////////////////////////////////
     sf::Vector2<float> pos = {100.f, 100.f};
+    sf::View view(sf::FloatRect({0.f, 0.f}, {1000.f, 1000.f}));
+    window.setView(view);
     while(window.isOpen()) {
 
 
@@ -82,6 +86,9 @@ int main() {
             else if (event->is<sf::Event::Resized>()) {
                 std::cout << "New width: " << window.getSize().x << '\n'
                           << "New height: " << window.getSize().y << '\n';
+                const auto* resized = event->getIf<sf::Event::Resized>();
+                sf::FloatRect visibleArea({0.f, 0.f}, sf::Vector2f(resized->size));
+                window.setView(sf::View(visibleArea));
             }
             else if (event->is<sf::Event::KeyPressed>()) {
                 const auto* keyPressed = event->getIf<sf::Event::KeyPressed>();
@@ -117,7 +124,7 @@ int main() {
 
         sprite.setPosition(pos);
         window.draw(sprite);
-
+        //sf::View currentView = window.getView();
 
         window.display();
     }
