@@ -4,7 +4,7 @@
 
 int main() {
 
-    Game game(800, 700, "Zombie Survivors");
+    Game game(1200, 800, "Zombie Survivors");
 
     game.pushState(std::make_unique<GameState>(game));
 

@@ -24,7 +24,8 @@ public:
 
     void handleInput() override;
     void update(float dt) override;
-    void draw(float dt) override;
+    void draw() override;
+    void Resize(int w, int h) override;
 };
 
 

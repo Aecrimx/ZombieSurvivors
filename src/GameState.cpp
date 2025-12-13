@@ -11,7 +11,7 @@ GameState::GameState(Game& ref) : State(ref) {
     sf::Vector2u size = game.getResourceManager().getTexture("player").getSize();
     player->setOrigin({size.x/2.f, size.y/2.f});
 
-    playerPos = {100.f, 100.f};
+    playerPos = {5000.f, 5000.f};
     player->setPosition(playerPos);
 
     // Use the loaded background texture consistently
@@ -21,7 +21,16 @@ GameState::GameState(Game& ref) : State(ref) {
 
     view.setSize({game.getWindowSize().x, game.getWindowSize().y});
     view.setCenter(playerPos);
+
+    sf::Vector2f winSize = game.getWindowSize();
+    GameState::Resize((int)winSize.x, (int)winSize.y);
+
 }
+
+void GameState::Resize(int w, int h) {
+    view = game.LetterboxView(view, w, h);
+}
+
 
 void GameState::handleInput() {
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Escape)) { // idk yet unde sa o tin
@@ -43,10 +52,10 @@ void GameState::update(float dt) {
 
     view.setCenter(playerPos);
 
-    std::cout << "dt: " << dt << "Pozitie: " << playerPos.x  << ' ' << playerPos.y<< '\n';
+    //dddfdsfdssssfawaffffffdfffffwaffstd::cout << "dt: " << dt << "Pozitie: " << playerPos.x  << ' ' << playerPos.y<< '\n';
 }
 
-void GameState::draw(float dt) {
+void GameState::draw() {
     game.getWindow().setView(view);
     game.getWindow().draw(*background);
     game.getWindow().draw(*player);

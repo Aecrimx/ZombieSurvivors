@@ -15,7 +15,9 @@ public:
 
     virtual void handleInput() = 0;
     virtual void update(float dt) = 0;
-    virtual void draw(float dt) = 0;
+    virtual void draw() = 0;
+
+    virtual void Resize(int w, int h) = 0; // pt fullscreen
 };
 
 
