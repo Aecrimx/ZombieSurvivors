@@ -66,6 +66,10 @@ add_executable(${MAIN_EXECUTABLE_NAME}
         src/Game.h
         src/GameState.cpp
         src/GameState.h
+        src/Weapon.cpp
+        src/Weapon.h
+        src/Player.cpp
+        src/Player.h
 )
 
 # NOTE: Add all defined targets (e.g. executables, libraries, etc. )

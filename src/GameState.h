@@ -4,16 +4,15 @@
 
 #include "State.h"
 #include "Game.h"
-
+#include "Player.h"
 
 
 #include <memory>
 
 class GameState : public State{
-    std::unique_ptr<sf::Sprite> player;
-    /*
-     *TO DO later: clasa player care da aici ref
-     */
+
+    std::unique_ptr<Player> player;
+
     std::unique_ptr<sf::Sprite> background;
     sf::View view;
     //maybe view de GUI si aici?
