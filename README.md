@@ -1,4 +1,4 @@
-###Description
+### Description
 
 The classic experience of Vampire Survivors remade in a SFML school project. Survive hoards of enemies that scale as time goes by leveling and unlocking items. As time passes the enemies will get stronger and stronger and you must keep up the pace. Items can synergise to create stronger versions of themselves. You don't have to worry about aiming since all weapons autofire.
 
@@ -10,7 +10,7 @@ The classic experience of Vampire Survivors remade in a SFML school project. Sur
 - [ ] Atleast 3 weapons
 - [ ] Mouse input movement(alongside WASD like in the OG game)
 
-###Controls
+### Controls
 - W,A,S,D to move
 - F to enter or exit fullscreen mode
 - ESC key to exit the game
