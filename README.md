@@ -10,6 +10,12 @@ The classic experience of Vampire Survivors remade in a SFML school project. Sur
 - [ ] Atleast 3 weapons
 - [ ] Mouse input movement(alongside WASD like in the OG game)
 
+### Meet your heroes...
+1. **Hocus**
+(/assets/wizard.png)
+* Graduating the wizarding school of Evermore with high honors and earning a PhD in Applied Fireball Sciences, Hocus has focused on demonstrating his degree on the battlefield. His current research is on the topic of curing Zombification by fire.
+
+
 ### Controls
 - W,A,S,D to move
 - F to enter or exit fullscreen mode
