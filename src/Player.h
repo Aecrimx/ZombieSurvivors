@@ -11,11 +11,11 @@
 
 struct CharacterData {
     std::string name;
-    std::string texture_name; // this is a texture key used with ResourceManager
+    std::string texture_name;
     float moveSpeed;
     float maxHealth;
     std::string startingWeapon;
-    std::string Weapon_sprite; // store by value to allow default construction
+    std::string Weapon_sprite;
 };
 
 class Player {
@@ -36,12 +36,12 @@ public:
     Player& operator=(const Player& other);
 
     //void handleInput();
-    void update(float dt);
+    void update(float dt, const std::vector<std::unique_ptr<Enemy>>& enemies, std::vector<Projectile>& projectiles);
     void draw(sf::RenderWindow& window);
 
     void addWeapon(const Weapon& weapon);
 
-    sf::Vector2f getPos() const; // maybe needed idk
+    sf::Vector2f getPos() const;
 
 
 };

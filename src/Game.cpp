@@ -86,7 +86,6 @@ void Game::run() {
                 }
             }
         }
-        //restu de event-uri le dau catch state-urile
 
         states.top()->handleInput();
         states.top()->update(dt);

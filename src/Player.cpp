@@ -1,5 +1,6 @@
 #include "Player.h"
 #include <iostream>
+#include "FireWand.h"
 
 
 Player::Player(const CharacterData& data, ResourceManager& resources)
@@ -13,8 +14,9 @@ Player::Player(const CharacterData& data, ResourceManager& resources)
     sprite.setOrigin({size.x / 2.f, size.y / 2.f});
     sprite.setPosition({5000.f, 5000.f});
 
-    addWeapon(Weapon(data.startingWeapon, data.Weapon_sprite, 35.f, 3.f));
-    //for now dar mai incl clase derivate Weapon
+    //addWeapon(Weapon(data.startingWeapon, data.Weapon_sprite, 35.f, 3.f));
+    addWeapon(FireWand(resources));
+    //de scos de aici as
 }
 
 
@@ -59,7 +61,7 @@ void Player::addWeapon(const Weapon &weapon) {
     weapons.push_back(weapon.copy());
 }
 
-void Player::update(float dt) {
+void Player::update(float dt, const std::vector<std::unique_ptr<Enemy>>& enemies, std::vector<Projectile>& projectiles) {
     sf::Vector2f velocity(0.f, 0.f);
 
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::W)) velocity.y -= speed * dt;
@@ -75,14 +77,8 @@ void Player::update(float dt) {
 
     sprite.move(velocity);
 
-    for (auto* w : weapons) {
-        w->update(dt);
-        if (w->canFire()) {
-
-            //proiectile
-            std::cout << "fire" << std::endl;
-            w->resetCooldown();
-        }
+    for (auto& w : weapons) {
+        w->update(dt, getPos(), enemies, projectiles);
     }
 }
 

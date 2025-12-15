@@ -70,6 +70,14 @@ add_executable(${MAIN_EXECUTABLE_NAME}
         src/Weapon.h
         src/Player.cpp
         src/Player.h
+        src/Projectile.cpp
+        src/Projectile.h
+        src/Zombie.cpp
+        src/Zombie.h
+        src/Enemy.cpp
+        src/Enemy.h
+        src/FireWand.cpp
+        src/FireWand.h
 )
 
 # NOTE: Add all defined targets (e.g. executables, libraries, etc. )

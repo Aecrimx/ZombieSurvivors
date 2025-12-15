@@ -22,7 +22,7 @@ sf::Texture &ResourceManager::getTexture(const std::string &name) {
         if (missing != textures.end()) {
             return missing->second;
         }
-        throw std::runtime_error("Texture not found in assets:" + name);
+        throw std::runtime_error("Texture not found in assets:" + name); //mutat in T2
     }
     return it->second;
 }

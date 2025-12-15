@@ -5,9 +5,11 @@
 #include "State.h"
 #include "Game.h"
 #include "Player.h"
-
+#include "Enemy.h"
+#include "Projectile.h"
 
 #include <memory>
+#include <vector>
 
 class GameState : public State{
 
@@ -16,7 +18,9 @@ class GameState : public State{
     std::unique_ptr<sf::Sprite> background;
     sf::View view;
     //maybe view de GUI si aici?
-    sf::Vector2f playerPos;
+    float spawnTimer{0.f};
+    std::vector<std::unique_ptr<Enemy>> enemies;
+    std::vector<Projectile> projectiles;
 
 public:
     explicit GameState(Game& game);

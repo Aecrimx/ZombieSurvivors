@@ -5,7 +5,7 @@
 #include <map>
 #include <string>
 #include <iostream>
-#include <stdexcept> // will change later to own exceptions pt tema 2
+#include <stdexcept> //de scos t2
 
 class ResourceManager {
     std::map<std::string, sf::Texture> textures;

@@ -1,30 +1,31 @@
 #ifndef OOP_WEAPON_H
 #define OOP_WEAPON_H
 
-#include <string>
+#include <SFML/Graphics.hpp>
+#include <vector>
+#include <memory>
+#include "Enemy.h"
+#include "Projectile.h"
+#include "ResourceManager.h"
 
 class Weapon {
+protected:
     std::string name;
-    std::string sprite_name;
-    float damage;
     float cooldown;
     float timer;
+    ResourceManager& resources;
+
 public:
-    Weapon(const std::string& name, const std::string& sprite_name, float damage, float cooldown)
-        : name(name), sprite_name(sprite_name), damage(damage), cooldown(cooldown), timer(0.f) {}
+    Weapon(const std::string& name, float cooldown, ResourceManager& res)
+        : name(name), cooldown(cooldown), timer(0.f), resources(res) {}
 
-    Weapon* copy() const {
-        return new Weapon(*this);
-    }
+    virtual ~Weapon() = default;
+    virtual Weapon* clone() const = 0;
+    virtual Weapon* copy() const { return clone(); }
 
-    void update(float dt) {
-        if (timer > 0) timer -= dt;
-    }
-
-    bool canFire() const {return timer <= 0;}
-    void resetCooldown() {timer = cooldown;}
-
-
+    virtual void update(float dt, sf::Vector2f playerPos,
+                        const std::vector<std::unique_ptr<Enemy>>& enemies,
+                        std::vector<Projectile>& projectiles) = 0;
 };
 
 
