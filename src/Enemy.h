@@ -7,7 +7,7 @@ protected:
     sf::Sprite sprite;
     float health, damage, speed;
 public:
-    Enemy(sf::Texture& texture, float hp, float dmg, float speed)
+    Enemy(const sf::Texture& texture, float hp, float dmg, float speed)
         : sprite(texture), health(hp), damage(dmg), speed(speed) {}
 
     virtual ~Enemy() = default;

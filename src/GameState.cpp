@@ -50,6 +50,9 @@ void GameState::handleInput() {
 }
 
 void GameState::update(float dt) {
+    if (!player) {return;}
+
+    //const sf::Vector2f playerPos = player->getPos();
     spawnTimer += dt;
     if (spawnTimer > 1.5f) {
         spawnTimer = 0;
@@ -59,10 +62,10 @@ void GameState::update(float dt) {
 
         enemies.push_back(std::make_unique<Zombie>(game.getResourceManager().getTexture("zombie"), spawnPos));
     }
-    if (player) {
-        player->update(dt, enemies, projectiles);
-        view.setCenter(player->getPos());
-    }
+
+    player->update(dt, enemies, projectiles);
+    view.setCenter(player->getPos());
+
     for (auto& enemy : enemies) {
         enemy->update(dt, player->getPos());
     }

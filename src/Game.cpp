@@ -34,9 +34,9 @@ void Game::pushState(std::unique_ptr<State> state) {
     states.push(std::move(state));
 }
 
-void Game::popState() {
-    if (!states.empty()) states.pop();
-}
+// void Game::popState() {
+//     if (!states.empty()) states.pop();
+// }
 
 sf::RenderWindow& Game::getWindow() {return window;}
 ResourceManager& Game::getResourceManager() {return resourceManager;}
@@ -60,9 +60,8 @@ void Game::run() {
                 const auto* resized = event->getIf<sf::Event::Resized>();
                 width = static_cast<int>(resized->size.x);
                 height = static_cast<int>(resized->size.y);
-                if (!states.empty()) {
-                    states.top()->Resize(width, height);
-                }
+
+                states.top()->Resize(width, height);
             } else if (event->is<sf::Event::KeyPressed>()) {
                 const auto* keyPressed = event->getIf<sf::Event::KeyPressed>();
                 if (keyPressed->scancode == sf::Keyboard::Scancode::Escape) {
@@ -80,9 +79,8 @@ void Game::run() {
                     auto newSize = window.getSize();
                     width = static_cast<int>(newSize.x);
                     height = static_cast<int>(newSize.y);
-                    if (!states.empty()) {
-                        states.top()->Resize(width, height);
-                    }
+
+                    states.top()->Resize(width, height);
                 }
             }
         }

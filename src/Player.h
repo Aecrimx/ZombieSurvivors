@@ -37,7 +37,7 @@ public:
 
     //void handleInput();
     void update(float dt, const std::vector<std::unique_ptr<Enemy>>& enemies, std::vector<Projectile>& projectiles);
-    void draw(sf::RenderWindow& window);
+    void draw(sf::RenderWindow& window) const;
 
     void addWeapon(const Weapon& weapon);
 

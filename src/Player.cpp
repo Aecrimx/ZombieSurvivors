@@ -82,7 +82,7 @@ void Player::update(float dt, const std::vector<std::unique_ptr<Enemy>>& enemies
     }
 }
 
-void Player::draw(sf::RenderWindow& window) {
+void Player::draw(sf::RenderWindow& window) const {
     window.draw(sprite);
 }
 

@@ -30,7 +30,7 @@ public:
     void run();
 
     void pushState(std::unique_ptr<State> state);
-    void popState();
+    //void popState();
 
     sf::RenderWindow& getWindow();
     ResourceManager& getResourceManager();

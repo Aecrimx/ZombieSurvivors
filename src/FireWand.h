@@ -7,7 +7,7 @@
 
 class FireWand : public Weapon {
 public:
-    FireWand(ResourceManager& res) : Weapon("Fire Wand", 5.0f, res) {}
+    explicit FireWand(ResourceManager& res) : Weapon("Fire Wand", 5.0f, res) {}
 
     Weapon* clone() const override { return new FireWand(*this); }
 

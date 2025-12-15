@@ -11,7 +11,7 @@ class Projectile {
     float life_time;
 
 public:
-    Projectile(sf::Texture& texture, sf::Vector2f pos, sf::Vector2f dir, float speed, float dmg)
+    Projectile(const sf::Texture& texture, sf::Vector2f pos, sf::Vector2f dir, float speed, float dmg)
         : sprite(texture), velocity(0,0), damage(dmg), life_time(3.0f) {
 
         //ori scale manual de sprite ori scale dat de img size momentan drc
@@ -31,12 +31,12 @@ public:
         life_time -= dt;
     }
 
-    void draw(sf::RenderWindow& window) {window.draw(sprite); }
+    void draw(sf::RenderWindow& window) const {window.draw(sprite); }
 
     bool isDead() const { return life_time <= 0.f;}
     sf::FloatRect getBounds() const { return sprite.getGlobalBounds(); }
     float getDamage() const {return damage;}
-    void Destroy() {life_time = -1.f;}
+    //void Destroy() {life_time = -1.f;}
 
 };
 
