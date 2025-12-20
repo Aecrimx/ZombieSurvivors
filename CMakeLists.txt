@@ -78,6 +78,10 @@ add_executable(${MAIN_EXECUTABLE_NAME}
         src/Enemy.h
         src/FireWand.cpp
         src/FireWand.h
+        src/Animation.cpp
+        src/Animation.h
+        src/Flying_Skull.cpp
+        src/Flying_Skull.h
 )
 
 # NOTE: Add all defined targets (e.g. executables, libraries, etc. )
