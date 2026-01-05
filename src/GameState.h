@@ -7,6 +7,7 @@
 #include "Player.h"
 #include "Projectile.h"
 #include "State.h"
+#include "HUD.h"
 
 #include <memory>
 #include <ostream>
@@ -15,10 +16,10 @@
 class GameState : public State {
 
   std::unique_ptr<Player> player;
+  std::unique_ptr<HUD> hud;
 
   std::unique_ptr<sf::Sprite> background;
   sf::View view;
-  // maybe view de GUI si aici?
   float spawnTimer{0.f};
   std::vector<std::unique_ptr<Enemy>> enemies;
   std::vector<Projectile> projectiles;
@@ -30,6 +31,8 @@ public:
   void update(float dt) override;
   void draw() override;
   void Resize(int w, int h) override;
+
+  std::vector<Projectile> &getProjectiles() { return projectiles; }
 
   friend std::ostream & operator<<(std::ostream &os, const GameState & /*obj*/) {
     return os << "[GameState]" << '\n';

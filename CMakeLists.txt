@@ -82,6 +82,10 @@ add_executable(${MAIN_EXECUTABLE_NAME}
         src/Animation.h
         src/Flying_Skull.cpp
         src/Flying_Skull.h
+        src/RangedEnemy.cpp
+        src/RangedEnemy.h
+        src/HUD.cpp
+        src/HUD.h
 )
 
 # NOTE: Add all defined targets (e.g. executables, libraries, etc. )

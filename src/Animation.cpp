@@ -5,6 +5,8 @@ Animation::Animation(sf::Sprite &target) : target(target) {
     progress = totalLength = 0.f;
 }
 
+Animation::~Animation() = default;
+
 void Animation::addFrame(Frame&& frame) {
     totalLength += frame.duration;
     frames.push_back(std::move(frame));
