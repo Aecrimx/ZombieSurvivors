@@ -43,7 +43,7 @@ public:
         sf::Vector2f dir = playerPos - sprite.getPosition();
         float length = std::sqrt(dir.x * dir.x + dir.y * dir.y);
 
-        if (length > 200.f) {
+        if (length > 300.f) {
             sf::Vector2f ndir = dir / length;
             sprite.move(ndir * speed * dt);
 

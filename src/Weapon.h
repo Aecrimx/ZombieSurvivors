@@ -28,11 +28,11 @@ public:
                       const std::vector<std::unique_ptr<Enemy>> &enemies,
                       std::vector<Projectile> &projectiles) = 0;
 
-friend std::ostream & operator<<(std::ostream &os, const Weapon &obj) {
-      return os
-             << "name: " << obj.name
-             << " cooldown: " << obj.cooldown
-             << " timer: " << obj.timer;
+  virtual void draw(sf::RenderWindow &window) const {}
+
+  friend std::ostream &operator<<(std::ostream &os, const Weapon &obj) {
+    return os << "name: " << obj.name << " cooldown: " << obj.cooldown
+              << " timer: " << obj.timer;
   }
 };
 
