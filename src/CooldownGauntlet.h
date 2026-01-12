@@ -1,0 +1,20 @@
+#ifndef OOP_COOLDOWNGAUNTLET_H
+#define OOP_COOLDOWNGAUNTLET_H
+
+#include "Item.h"
+#include "Player.h"
+
+class CooldownGauntlet : public Item {
+public:
+    CooldownGauntlet() : Item("Cooldown Gauntlet", 1) {
+    }
+
+    void applyEffect(Player &player) override {
+        // Level 1: 16.67%, Level 2: 33.34%, Level 3: 50% cooldown reduction
+        //lvl1 : 16.67%, apoi 33.35% apoi 50%
+        float cdMultiplier = 1.0f - (level * 0.1667f);
+        player.setCooldownMultiplier(cdMultiplier);
+    }
+};
+
+#endif // OOP_COOLDOWNGAUNTLET_H

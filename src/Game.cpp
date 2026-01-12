@@ -36,9 +36,9 @@ void Game::pushState(std::unique_ptr<State> state) {
   states.push(std::move(state));
 }
 
-// void Game::popState() {
-//     if (!states.empty()) states.pop();
-// }
+void Game::popState() {
+    if (!states.empty()) states.pop();
+}
 
 sf::RenderWindow &Game::getWindow() { return window; }
 ResourceManager &Game::getResourceManager() { return resourceManager; }

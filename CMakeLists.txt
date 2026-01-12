@@ -88,6 +88,33 @@ add_executable(${MAIN_EXECUTABLE_NAME}
         src/HUD.h
         src/DemonicBook.cpp
         src/DemonicBook.h
+        src/Bat.cpp
+        src/Bat.h
+        src/KnightZombie.cpp
+        src/KnightZombie.h
+        src/BigZombieBoss.cpp
+        src/BigZombieBoss.h
+        src/ExperienceStar.cpp
+        src/ExperienceStar.h
+        src/HealthPickup.cpp
+        src/HealthPickup.h
+        src/Item.cpp
+        src/Item.h
+        src/Armor.h
+        src/Boots.h
+        src/CooldownGauntlet.h
+        src/HeartCrystal.h
+        src/MagicGun.cpp
+        src/MagicGun.h
+        src/SoulLantern.cpp
+        src/SoulLantern.h
+        src/BoneShooter.cpp
+        src/BoneShooter.h
+        src/MenuState.cpp
+        src/MenuState.h
+#        src/SaveData.h
+#        src/SaveManager.cpp
+#        src/SaveManager.h
 )
 
 # NOTE: Add all defined targets (e.g. executables, libraries, etc. )
@@ -104,6 +131,10 @@ set_compiler_flags(RUN_SANITIZERS TRUE TARGET_NAMES ${MAIN_EXECUTABLE_NAME})
 target_include_directories(${MAIN_EXECUTABLE_NAME} SYSTEM PRIVATE ${SFML_SOURCE_DIR}/include)
 target_link_directories(${MAIN_EXECUTABLE_NAME} PRIVATE ${SFML_BINARY_DIR}/lib)
 target_link_libraries(${MAIN_EXECUTABLE_NAME} PRIVATE SFML::Graphics SFML::Window SFML::System Threads::Threads)
+target_include_directories(
+        ${MAIN_EXECUTABLE_NAME} SYSTEM PRIVATE
+        ext/include/json
+)
 
 if(APPLE)
 elseif(UNIX)

@@ -8,21 +8,25 @@ class Game;
 
 class State {
 protected:
-  Game &game;
+    Game &game;
 
 public:
-  explicit State(Game &ref) : game(ref) {}
-  virtual ~State() = default;
+    explicit State(Game &ref) : game(ref) {
+    }
 
-  virtual void handleInput() = 0;
-  virtual void update(float dt) = 0;
-  virtual void draw() = 0;
+    virtual ~State() = default;
 
-  virtual void Resize(int w, int h) = 0; // pt fullscreen
+    virtual void handleInput() = 0;
 
-friend std::ostream & operator<<(std::ostream &os, const State & /*obj*/) {
-    return os << "[State]" << ": din pacate si eu sunt doar o clasa abstracta si nu am ce afisa momentan";
-  }
+    virtual void update(float dt) = 0;
+
+    virtual void draw() = 0;
+
+    virtual void Resize(int w, int h) = 0; // pt fullscreen
+
+    friend std::ostream &operator<<(std::ostream &os, const State & /*obj*/) {
+        return os << "[State]" << ": din pacate si eu sunt doar o clasa abstracta si nu am ce afisa momentan";
+    }
 };
 
 #endif // OOP_STATE_H

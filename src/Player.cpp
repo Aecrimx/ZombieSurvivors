@@ -5,20 +5,22 @@
 
 Player::Player(const CharacterData &data, ResourceManager &resources)
     : sprite(resources.getTexture(data.texture_name)), speed(data.moveSpeed),
-      maxHealth(data.maxHealth), currentHealth(data.maxHealth) {
+      baseSpeed(data.moveSpeed), maxHealth(data.maxHealth),
+      currentHealth(data.maxHealth), healthRegen(0.f), level(1), currentXP(0.f),
+      xpToNextLevel(50.f), facingRight(true), damageReduction(0.f),
+      cooldownMultiplier(1.f) {
   sprite.setScale({0.2f, 0.2f});
 
   sf::Vector2u size = resources.getTexture(data.texture_name).getSize();
   sprite.setOrigin({size.x / 2.f, size.y / 2.f});
   sprite.setPosition({5000.f, 5000.f});
 
-
   if (data.startingWeapon == "Fire wand") {
     addWeapon(FireWand(resources));
   } else if (data.startingWeapon == "Demonic Book") {
     addWeapon(DemonicBook(resources));
   }
-  //else if (data.startingWeapon == "Bone") {addWeapon(Bone(resources));}
+  // else if (data.startingWeapon == "Bone") {addWeapon(Bone(resources));}
 }
 
 Player::~Player() {
@@ -26,14 +28,24 @@ Player::~Player() {
     delete w;
   }
   weapons.clear();
+
+  for (Item *i : items) {
+    delete i;
+  }
+  items.clear();
 }
 
 Player::Player(const Player &other)
-    : sprite(other.sprite), speed(other.speed), maxHealth(other.maxHealth),
-      currentHealth(other.currentHealth) {
+    : sprite(other.sprite), speed(other.speed), baseSpeed(other.baseSpeed),
+      maxHealth(other.maxHealth), currentHealth(other.currentHealth),
+      healthRegen(other.healthRegen), level(other.level),
+      currentXP(other.currentXP), xpToNextLevel(other.xpToNextLevel),
+      facingRight(other.facingRight), damageReduction(other.damageReduction),
+      cooldownMultiplier(other.cooldownMultiplier) {
   for (const auto *w : other.weapons) {
     weapons.push_back(w->copy());
   }
+  // Note: Items are not copied (pointer ownership issues)
 }
 
 Player &Player::operator=(const Player &other) {
@@ -43,10 +55,23 @@ Player &Player::operator=(const Player &other) {
     }
     weapons.clear();
 
+    for (Item *i : items) {
+      delete i;
+    }
+    items.clear();
+
     sprite = other.sprite;
     speed = other.speed;
+    baseSpeed = other.baseSpeed;
     maxHealth = other.maxHealth;
     currentHealth = other.currentHealth;
+    healthRegen = other.healthRegen;
+    level = other.level;
+    currentXP = other.currentXP;
+    xpToNextLevel = other.xpToNextLevel;
+    facingRight = other.facingRight;
+    damageReduction = other.damageReduction;
+    cooldownMultiplier = other.cooldownMultiplier;
 
     for (const auto *w : other.weapons) {
       weapons.push_back(w->copy());
@@ -62,6 +87,13 @@ void Player::addWeapon(const Weapon &weapon) {
 void Player::update(float dt, const sf::RenderWindow &window,
                     const std::vector<std::unique_ptr<Enemy>> &enemies,
                     std::vector<Projectile> &projectiles) {
+  // Health regeneration
+  if (healthRegen > 0.f && currentHealth < maxHealth) {
+    currentHealth += healthRegen * dt;
+    if (currentHealth > maxHealth)
+      currentHealth = maxHealth;
+  }
+
   sf::Vector2f velocity(0.f, 0.f);
 
   if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::W))
@@ -70,11 +102,13 @@ void Player::update(float dt, const sf::RenderWindow &window,
     velocity.y += speed * dt;
   if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::A)) {
     velocity.x -= speed * dt;
+    facingRight = false;
     if (sprite.getScale().x > 0)
       sprite.setScale({-0.2f, 0.2f});
   }
   if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::D)) {
     velocity.x += speed * dt;
+    facingRight = true;
     if (sprite.getScale().x < 0)
       sprite.setScale({0.2f, 0.2f});
   }
@@ -123,9 +157,36 @@ void Player::draw(sf::RenderWindow &window) const {
 sf::Vector2f Player::getPos() const { return sprite.getPosition(); }
 
 void Player::takeDamage(float amount) {
-  std::cout << "player hit: took " << amount << " amount of damage"
+  // Apply damage reduction from items
+  float finalDamage = amount * (1.f - damageReduction);
+
+  std::cout << "player hit: took " << finalDamage << " amount of damage"
             << std::endl;
-  currentHealth -= amount;
+  currentHealth -= finalDamage;
   if (currentHealth < 0)
     currentHealth = 0;
+}
+
+void Player::addItem(Item *item) {
+  if (items.size() < 3) {
+    items.push_back(item);
+  }
+}
+
+void Player::addXP(float amount) {
+  currentXP += amount;
+  // Level up check happens externally in GameState
+}
+
+void Player::levelUp() {
+  level++;
+  currentXP = 0.f;
+  xpToNextLevel = 50.f + (level * 10.f); // XP scaling formula
+}
+
+void Player::heal(float amount) {
+  currentHealth += amount;
+  if (currentHealth > maxHealth) {
+    currentHealth = maxHealth;
+  }
 }
