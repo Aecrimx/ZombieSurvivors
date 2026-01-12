@@ -4,13 +4,14 @@
 #include <iostream>
 
 GameOverState::GameOverState(Game &gameRef, int score,
-                             const std::string &charName, bool isVictory)
+                             const std::string &charName, bool isVictory,
+                             State *underlyingState)
     : State(gameRef), retryHovered(false), menuHovered(false),
-      victory(isVictory), finalScore(score), characterName(charName) {
+      victory(isVictory), finalScore(score), characterName(charName),
+      gameState(underlyingState) {
     if (!font.openFromFile("fonts/game_over.ttf")) {
         std::cerr << "Failed to load font!" << std::endl;
     }
-
 
     std::string titleStr = victory ? "YOU WON" : "GAME OVER";
     sf::Color titleColor = victory ? sf::Color::Yellow : sf::Color::Red;
@@ -37,7 +38,8 @@ GameOverState::GameOverState(Game &gameRef, int score,
 
     highScoreText = std::make_unique<sf::Text>(
         font, "High Score: " + std::to_string(highScore), 35);
-    highScoreText->setFillColor(sf::Color(255, 215, 0)); // rgb value pt culoarea aurului
+    highScoreText->setFillColor(
+        sf::Color(255, 215, 0)); // rgb value pt culoarea aurului
 
     retryText = std::make_unique<sf::Text>(font, "Retry", 40);
     retryText->setFillColor(sf::Color::White);
@@ -92,7 +94,7 @@ void GameOverState::update(float dt) {
     sf::Vector2f mousePosF(static_cast<float>(mousePos.x),
                            static_cast<float>(mousePos.y));
 
-    //pt mouse hovering
+    // pt mouse hovering
     retryHovered = retryBounds.contains(mousePosF);
     menuHovered = menuBounds.contains(mousePosF);
 
@@ -116,6 +118,12 @@ void GameOverState::update(float dt) {
 }
 
 void GameOverState::draw() {
+    if (gameState) {
+        gameState->draw();
+    }
+
+    game.getWindow().setView(game.getWindow().getDefaultView());
+
     sf::RectangleShape overlay({game.getWindowSize().x, game.getWindowSize().y});
     overlay.setFillColor(sf::Color(0, 0, 0, 200));
     game.getWindow().draw(overlay);

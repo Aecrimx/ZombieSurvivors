@@ -46,7 +46,7 @@ public:
                 sf::Vector2f projectileDir = dir;
                 sf::Texture &tex = resources->getTexture("dumbbell");
                 const float projSpeed = 200.f;
-                const float projDmg = 10.f;
+                const float projDmg = 15.f;
 
                 /*
                  * Atacul special al bossului e sa spawneze doua proiectle, unu la stanga lui si unu la dreapta

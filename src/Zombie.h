@@ -8,7 +8,7 @@
 class Zombie : public Enemy {
 public:
     Zombie(sf::Texture &texture, sf::Vector2f startPos)
-        : Enemy(texture, 20.f, 100.f, 125.f) {
+        : Enemy(texture, 20.f, 10.f, 125.f) {
         sprite.setOrigin({texture.getSize().x / 2.f, texture.getSize().y / 2.f});
         sprite.setPosition(startPos);
         sprite.setScale({0.2f, 0.2f});

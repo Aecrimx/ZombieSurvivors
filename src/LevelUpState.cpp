@@ -10,8 +10,10 @@
 #include <iostream>
 #include <random>
 
-LevelUpState::LevelUpState(Game &gameRef, Player *playerRef)
-    : State(gameRef), hoveredIndex(-1), player(playerRef) {
+LevelUpState::LevelUpState(Game &gameRef, Player *playerRef,
+                           State *underlyingState)
+    : State(gameRef), hoveredIndex(-1), player(playerRef),
+      gameState(underlyingState) {
     if (!font.openFromFile("fonts/game_over.ttf")) {
         std::cerr << "Failed to load font!" << std::endl;
     }
@@ -39,7 +41,8 @@ void LevelUpState::generateOptions() {
     std::vector<PossibleUpgrade> allUpgrades;
 
     auto items = player->getItems();
-    bool hasArmor = false, hasBoots = false, hasCooldown = false, hasHeart = false;
+    bool hasArmor = false, hasBoots = false, hasCooldown = false,
+            hasHeart = false;
 
     for (const auto *item: items) {
         if (item->getName() == "Armor")
@@ -112,7 +115,8 @@ void LevelUpState::generateOptions() {
 
         if (!hasMagicGun) {
             allUpgrades.push_back({
-                "Magic Gun", "Shoots lasers in a clock-wise pattern.",
+                "Magic Gun",
+                "Shoots lasers in a clock-wise pattern.",
                 [this](Player &p) {
                     MagicGun weapon(game.getResourceManager());
                     p.addWeapon(weapon);
@@ -122,7 +126,8 @@ void LevelUpState::generateOptions() {
         }
         if (!hasSoulLantern) {
             allUpgrades.push_back({
-                "Soul Lantern", "Shoots a soul scream in a direction.",
+                "Soul Lantern",
+                "Shoots a soul scream in a direction.",
                 [this](Player &p) {
                     SoulLantern weapon(game.getResourceManager());
                     p.addWeapon(weapon);
@@ -146,7 +151,7 @@ void LevelUpState::generateOptions() {
         [](Player &p) { p.increaseSpeed(1.15f); }, true
     });
 
-    //filtrare available items
+    // filtrare available items
     std::vector<PossibleUpgrade> available;
     for (const auto &upgrade: allUpgrades) {
         if (upgrade.available) {
@@ -156,7 +161,8 @@ void LevelUpState::generateOptions() {
 
     /*
      * Am folosit un random generator din std in loc de un clasic rand().
-     * note to self: rd da seed, std::mt19937 este un mersenne twister RNG, apoi doar dau shuffle la vector.
+     * note to self: rd da seed, std::mt19937 este un mersenne twister RNG, apoi
+     * doar dau shuffle la vector.
      */
     std::random_device rd;
     std::mt19937 gen(rd());
@@ -243,6 +249,11 @@ void LevelUpState::update(float dt) {
 }
 
 void LevelUpState::draw() {
+    if (gameState) {
+        gameState->draw();
+    }
+    game.getWindow().setView(game.getWindow().getDefaultView());
+
     sf::RectangleShape overlay({game.getWindowSize().x, game.getWindowSize().y});
     overlay.setFillColor(sf::Color(0, 0, 0, 180));
 

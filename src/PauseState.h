@@ -18,10 +18,12 @@ private:
     bool continueHovered;
     bool exitHovered;
 
+    State *gameState;
+
     void updateLayout(int windowWidth, int windowHeight);
 
 public:
-    explicit PauseState(Game &gameRef);
+    explicit PauseState(Game &gameRef, State *underlyingState = nullptr);
 
     void handleInput() override;
 

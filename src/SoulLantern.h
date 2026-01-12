@@ -53,7 +53,7 @@ public:
         if (timer <= 0) {
             sf::Vector2f direction(1.f, 0.f);
 
-            sf::Texture &tex = resources.getTexture("soul_Scream32x64");
+            sf::Texture &tex = resources.getTexture("soul_Scream32x64.png");
 
             projectiles.emplace_back(tex, playerPos, direction, 150.f, 35.f, false);
 

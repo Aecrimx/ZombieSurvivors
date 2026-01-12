@@ -1,7 +1,14 @@
 #include "GameState.h"
+#include "Bat.h"
+#include "BigZombieBoss.h"
 #include "DemonicBook.h"
 #include "FireWand.h"
 #include "Game.h"
+#include "GameOverState.h"
+#include "KnightZombie.h"
+#include "LevelUpState.h"
+#include "PauseState.h"
+#include "SaveManager.h"
 #include "Zombie.h"
 #include <cmath>
 #include <iostream>
@@ -29,6 +36,7 @@ GameState::GameState(Game &ref) : State(ref) {
                                         "Demonic Book", "demonic_book");
 
     player = std::make_unique<Player>(Azoth, res);
+    characterName = "demon";
 
     background = std::make_unique<sf::Sprite>(
         game.getResourceManager().getTexture("background"));
@@ -45,11 +53,16 @@ GameState::GameState(Game &ref) : State(ref) {
     GameState::Resize(static_cast<int>(size.x), static_cast<int>(size.y));
 }
 
-GameState::GameState(Game &ref, const CharacterData &charData) : State(ref) {
+GameState::GameState(Game &gameRef, const CharacterData &charData)
+    : State(gameRef), gameTimer(0.f), characterName(charData.name),
+      bossSpawned(false), contactDamageCooldown(0.f), escWasPressed(false) {
     ResourceManager &res = game.getResourceManager();
 
     res.loadTexture("fire_wand", "assets/fire_wand.png");
     res.loadTexture("zombie", "assets/zombie.png");
+    res.loadTexture("bat", "assets/bat64x64.png");
+    res.loadTexture("knight_zombie", "assets/knight_zombie512x567.png");
+    res.loadTexture("boss", "assets/le_big_boss.png");
     res.loadTexture("fireball", "assets/fireball.png");
     res.loadTexture("wizard", "assets/wizard.png");
     res.loadTexture("spinning_skull", "assets/spinning_skull_sheet.png");
@@ -62,8 +75,11 @@ GameState::GameState(Game &ref, const CharacterData &charData) : State(ref) {
     res.loadTexture("background", "assets/grass.png");
     res.getTexture("background").setRepeated(true);
 
+    res.loadTexture("experience", "assets/experience_star128x128.png");
+    res.loadTexture("health", "assets/health_pickup128x128.png");
 
     player = std::make_unique<Player>(charData, res);
+    characterName = charData.texture_name;
 
     background = std::make_unique<sf::Sprite>(
         game.getResourceManager().getTexture("background"));
@@ -93,9 +109,10 @@ void GameState::Resize(int w, int h) {
 }
 
 void GameState::handleInput() {
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Escape)) {
-        // idk yet unde sa o tin
-        game.getWindow().close();
+    bool escCurrentlyPressed =
+            sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Escape);
+    if (escCurrentlyPressed && !escWasPressed) {
+        game.pushState(std::make_unique<PauseState>(game, this));
     }
 }
 
@@ -104,24 +121,86 @@ void GameState::update(float dt) {
         return;
     }
 
-    // const sf::Vector2f playerPos = player->getPos();
+    gameTimer += dt;
+
+    if (player->shouldLevelUp()) {
+        player->levelUp();
+        game.pushState(std::make_unique<LevelUpState>(game, player.get(), this));
+        return;
+    }
+
+    if (player->isDead()) {
+        int score = player->getLevel() * 100;
+        game.scheduleReplace(std::make_unique<GameOverState>(
+            game, score, characterName, false, this));
+        return;
+    }
+
+    if (!bossSpawned && gameTimer >= 900.f) {
+        // 900s = 15 min
+        bossSpawned = true;
+        float angle = (rand() % 360) * 3.14f / 180.f;
+        float dist = 500.f;
+        sf::Vector2f spawnPos =
+                player->getPos() +
+                sf::Vector2f(std::cos(angle) * dist, std::sin(angle) * dist);
+
+        enemies.push_back(std::make_unique<BigZombieBoss>(
+            game.getResourceManager().getTexture("boss"), spawnPos, projectiles,
+            game.getResourceManager(), player->getLevel()));
+    }
+
     spawnTimer += dt;
-    if (spawnTimer > 1.5f) {
+    float spawnInterval = 3.5f;
+
+    if (spawnTimer > spawnInterval) {
         spawnTimer = 0;
-        float angle = (rand() % 360) * 3.14f / 180.f; // random angle
+        float angle = (rand() % 360) * 3.14f / 180.f;
         float dist = 400.f;
         sf::Vector2f spawnPos =
                 player->getPos() +
                 sf::Vector2f(std::cos(angle) * dist, std::sin(angle) * dist);
 
-        // schimbat la prefered spawn time dar rand momentan
-        if (rand() % 2 == 0) {
+        if (gameTimer < 180.f) {
+            // mix de zombie si bats
+            if (rand() % 2 == 0) {
+                enemies.push_back(
+                    std::make_unique<Bat>(game.getResourceManager().getTexture("bat"),
+                                          spawnPos, player->getLevel()));
+            } else {
+                enemies.push_back(std::make_unique<Zombie>(
+                    game.getResourceManager().getTexture("zombie"), spawnPos));
+            }
+        } else if (gameTimer < 420.f) {
+            // doar zombii
             enemies.push_back(std::make_unique<Zombie>(
                 game.getResourceManager().getTexture("zombie"), spawnPos));
+        } else if (gameTimer < 600.f) {
+            // si knight zombies
+            int enemyType = rand() % 3;
+            if (enemyType == 0) {
+                enemies.push_back(std::make_unique<KnightZombie>(
+                    game.getResourceManager().getTexture("knight_zombie"), spawnPos,
+                    player->getLevel()));
+            } else {
+                enemies.push_back(std::make_unique<Zombie>(
+                    game.getResourceManager().getTexture("zombie"), spawnPos));
+            }
         } else {
-            enemies.push_back(std::make_unique<Flying_Skull>(
-                game.getResourceManager().getTexture("spinning_skull"), spawnPos,
-                projectiles, game.getResourceManager()));
+            // acm si flying skulls
+            int enemyType = rand() % 4;
+            if (enemyType == 0) {
+                enemies.push_back(std::make_unique<Flying_Skull>(
+                    game.getResourceManager().getTexture("spinning_skull"), spawnPos,
+                    projectiles, game.getResourceManager()));
+            } else if (enemyType == 1) {
+                enemies.push_back(std::make_unique<KnightZombie>(
+                    game.getResourceManager().getTexture("knight_zombie"), spawnPos,
+                    player->getLevel()));
+            } else {
+                enemies.push_back(std::make_unique<Zombie>(
+                    game.getResourceManager().getTexture("zombie"), spawnPos));
+            }
         }
     }
 
@@ -130,6 +209,49 @@ void GameState::update(float dt) {
 
     for (auto &enemy: enemies) {
         enemy->update(dt, player->getPos());
+    }
+
+    for (auto &pickup: pickups) {
+        pickup->update(dt, player->getPos());
+    }
+
+    sf::FloatRect playerBounds = player->getBounds();
+    for (auto it = pickups.begin(); it != pickups.end();) {
+        sf::FloatRect pb = (*it)->getBounds();
+        bool collides =
+        (playerBounds.position.x < pb.position.x + pb.size.x &&
+         playerBounds.position.x + playerBounds.size.x > pb.position.x &&
+         playerBounds.position.y < pb.position.y + pb.size.y &&
+         playerBounds.position.y + playerBounds.size.y > pb.position.y);
+        if (collides) {
+            (*it)->onCollect(*player);
+            it = pickups.erase(it);
+        } else {
+            ++it;
+        }
+    }
+
+    if (contactDamageCooldown > 0.f) {
+        contactDamageCooldown -= dt;
+    }
+
+    for (const auto &enemy: enemies) {
+        if (contactDamageCooldown <= 0.f) {
+            sf::FloatRect enemyBounds = enemy->getBounds();
+            bool collides = (playerBounds.position.x <
+                             enemyBounds.position.x + enemyBounds.size.x &&
+                             playerBounds.position.x + playerBounds.size.x >
+                             enemyBounds.position.x &&
+                             playerBounds.position.y <
+                             enemyBounds.position.y + enemyBounds.size.y &&
+                             playerBounds.position.y + playerBounds.size.y >
+                             enemyBounds.position.y);
+            if (collides) {
+                player->takeDamage(10.f);
+                contactDamageCooldown = 1.0f;
+                break;
+            }
+        }
     }
 
     for (auto it = projectiles.begin(); it != projectiles.end();) {
@@ -171,12 +293,41 @@ void GameState::update(float dt) {
             ++it;
         }
     }
+
+    SaveManager &saveManager = SaveManager::getInstance();
     for (auto it = enemies.begin(); it != enemies.end();) {
         if ((*it)->isDead()) {
+            sf::Vector2f deathPos = (*it)->getPos();
+
+            if (dynamic_cast<Flying_Skull *>(it->get())) {
+                saveManager.incrementFlyingSkullKills();
+                saveManager.checkUnlocks();
+            }
+
+            if (dynamic_cast<BigZombieBoss *>(it->get())) {
+                int score = player->getLevel() * 100;
+                game.scheduleReplace(std::make_unique<GameOverState>(
+                    game, score, characterName, true, this));
+                return;
+            }
+
+            int dropChance = rand() % 100;
+            if (dropChance < 90) {
+                pickups.push_back(std::make_unique<ExperienceStar>(
+                    game.getResourceManager().getTexture("experience"), deathPos));
+            } else {
+                pickups.push_back(std::make_unique<HealthPickup>(
+                    game.getResourceManager().getTexture("health"), deathPos));
+            }
             it = enemies.erase(it);
         } else {
             ++it;
         }
+    }
+
+    // Update HUD with player data and timer
+    if (hud && player) {
+        hud->update(*player, gameTimer);
     }
 }
 
@@ -189,9 +340,12 @@ void GameState::draw() {
     for (const auto &proj: projectiles)
         proj.draw(game.getWindow());
 
+    for (const auto &pickup: pickups)
+        pickup->draw(game.getWindow());
+
     if (player)
         player->draw(game.getWindow());
 
-    if (hud)
-        hud->draw(game.getWindow());
+    if (hud && player)
+        hud->draw(game.getWindow(), *player); // Pass player reference
 }

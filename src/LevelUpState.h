@@ -5,16 +5,16 @@
 #include "State.h"
 #include <SFML/Graphics.hpp>
 #include <functional>
-//Pt std::function ca template ca sa pot folosi functii lambda
+// Pt std::function ca template ca sa pot folosi functii lambda
 #include <memory>
 #include <string>
 #include <vector>
-
 
 class LevelUpState : public State {
 private:
     sf::Font font;
     std::unique_ptr<sf::Text> titleText;
+    State *gameState;
 
     struct UpgradeOption {
         std::string name;
@@ -37,7 +37,8 @@ private:
     void updateLayout(int windowWidth, int windowHeight);
 
 public:
-    LevelUpState(Game &gameRef, Player *playerRef);
+    LevelUpState(Game &gameRef, Player *playerRef,
+                 State *underlyingState = nullptr);
 
     void handleInput() override;
 

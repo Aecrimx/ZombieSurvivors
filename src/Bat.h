@@ -8,10 +8,10 @@
 class Bat : public Enemy {
 public:
     Bat(sf::Texture &texture, sf::Vector2f startPos, int playerLevel = 0)
-        : Enemy(texture, 10.f + (5.f * playerLevel), 5.f, 200.f) {
+        : Enemy(texture, 10.f + (5.f * playerLevel), 5.f, 135.f) {
         sprite.setOrigin({texture.getSize().x / 2.f, texture.getSize().y / 2.f});
         sprite.setPosition(startPos);
-        sprite.setScale({0.15f, 0.15f});
+        sprite.setScale({1.f, 1.f});
     }
 
     void update(float dt, sf::Vector2f playerPos) override {
@@ -22,9 +22,9 @@ public:
             dir /= length;
             sprite.move(dir * speed * dt);
             if (dir.x < 0)
-                sprite.setScale({-0.15f, 0.15f});
+                sprite.setScale({-1.f, 1.f});
             else
-                sprite.setScale({0.15f, 0.15f});
+                sprite.setScale({1.f, 1.f});
         }
     }
 

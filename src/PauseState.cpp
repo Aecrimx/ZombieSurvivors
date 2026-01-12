@@ -2,8 +2,9 @@
 #include "Game.h"
 #include <iostream>
 
-PauseState::PauseState(Game &gameRef)
-    : State(gameRef), continueHovered(false), exitHovered(false) {
+PauseState::PauseState(Game &gameRef, State *underlyingState)
+    : State(gameRef), continueHovered(false), exitHovered(false),
+      gameState(underlyingState) {
     if (!font.openFromFile("fonts/game_over.ttf")) {
         std::cerr << "Failed to load font!" << std::endl;
     }
@@ -79,6 +80,12 @@ void PauseState::update(float dt) {
 }
 
 void PauseState::draw() {
+    if (gameState) {
+        gameState->draw();
+    }
+
+    game.getWindow().setView(game.getWindow().getDefaultView());
+
     sf::RectangleShape overlay({game.getWindowSize().x, game.getWindowSize().y});
     overlay.setFillColor(sf::Color(0, 0, 0, 150));
     game.getWindow().draw(overlay);

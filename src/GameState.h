@@ -2,8 +2,12 @@
 #define OOP_GAMESTATE_H
 
 #include "Enemy.h"
+#include "ExperienceStar.h"
 #include "Game.h"
 #include "HUD.h"
+#include "HealthPickup.h"
+#include "PauseState.h"
+#include "Pickup.h"
 #include "Player.h"
 #include "Projectile.h"
 #include "State.h"
@@ -19,13 +23,16 @@ class GameState : public State {
     std::unique_ptr<sf::Sprite> background;
     sf::View view;
     float spawnTimer{0.f};
-    float gameTimer{0.f};//total game time
+    float gameTimer{0.f}; // total game time
     std::vector<std::unique_ptr<Enemy> > enemies;
     std::vector<Projectile> projectiles;
     std::vector<std::unique_ptr<Pickup> > pickups;
 
     std::string characterName;
     bool bossSpawned{false};
+
+    float contactDamageCooldown{0.f};
+    bool escWasPressed{false};
 
 public:
     explicit GameState(Game &game);

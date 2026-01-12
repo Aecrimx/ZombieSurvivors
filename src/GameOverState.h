@@ -26,11 +26,13 @@ private:
     int finalScore;
     std::string characterName;
 
+    State *gameState;
+
     void updateLayout(int windowWidth, int windowHeight);
 
 public:
     GameOverState(Game &gameRef, int score, const std::string &charName,
-                  bool isVictory);
+                  bool isVictory, State *underlyingState = nullptr);
 
     void handleInput() override;
 
