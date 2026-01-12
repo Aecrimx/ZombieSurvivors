@@ -2,6 +2,8 @@
 #include "Armor.h"
 #include "Boots.h"
 #include "CooldownGauntlet.h"
+#include "DemonicBook.h"
+#include "FireWand.h"
 #include "Game.h"
 #include "HeartCrystal.h"
 #include "MagicGun.h"
@@ -105,12 +107,17 @@ void LevelUpState::generateOptions() {
 
     auto weapons = player->getWeapons();
     if (weapons.size() < 3) {
-        bool hasMagicGun = false, hasSoulLantern = false; // de terminat arme aici
+        bool hasMagicGun = false, hasSoulLantern = false, hasFireWand = false,
+                hasDemonicBook = false;
         for (const auto *weapon: weapons) {
             if (weapon->getName() == "Magic Gun")
                 hasMagicGun = true;
             if (weapon->getName() == "Soul Lantern")
                 hasSoulLantern = true;
+            if (weapon->getName() == "Fire wand")
+                hasFireWand = true;
+            if (weapon->getName() == "Demonic Book")
+                hasDemonicBook = true;
         }
 
         if (!hasMagicGun) {
@@ -130,6 +137,27 @@ void LevelUpState::generateOptions() {
                 "Shoots a soul scream in a direction.",
                 [this](Player &p) {
                     SoulLantern weapon(game.getResourceManager());
+                    p.addWeapon(weapon);
+                },
+                true
+            });
+        }
+        if (!hasFireWand) {
+            allUpgrades.push_back({
+                "Fire wand", "Shoots fireballs towards enemies.",
+                [this](Player &p) {
+                    FireWand weapon(game.getResourceManager());
+                    p.addWeapon(weapon);
+                },
+                true
+            });
+        }
+        if (!hasDemonicBook) {
+            allUpgrades.push_back({
+                "Demonic Book",
+                "Damaging aura that periodically damages enemies.",
+                [this](Player &p) {
+                    DemonicBook weapon(game.getResourceManager());
                     p.addWeapon(weapon);
                 },
                 true
