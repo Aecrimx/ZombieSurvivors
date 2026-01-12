@@ -112,6 +112,12 @@ add_executable(${MAIN_EXECUTABLE_NAME}
         src/BoneShooter.h
         src/MenuState.cpp
         src/MenuState.h
+        src/LevelUpState.cpp
+        src/LevelUpState.h
+        src/PauseState.cpp
+        src/PauseState.h
+        src/GameOverState.cpp
+        src/GameOverState.h
         src/SaveData.h
         src/SaveManager.cpp
         src/SaveManager.h

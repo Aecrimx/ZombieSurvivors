@@ -34,6 +34,8 @@ public:
     virtual void draw(sf::RenderWindow &window) const {
     }
 
+    std::string getName() const { return name; }
+
     friend std::ostream &operator<<(std::ostream &os, const Weapon &obj) {
         return os << "name: " << obj.name << " cooldown: " << obj.cooldown
                << " timer: " << obj.timer;

@@ -19,8 +19,13 @@ class GameState : public State {
     std::unique_ptr<sf::Sprite> background;
     sf::View view;
     float spawnTimer{0.f};
+    float gameTimer{0.f};//total game time
     std::vector<std::unique_ptr<Enemy> > enemies;
     std::vector<Projectile> projectiles;
+    std::vector<std::unique_ptr<Pickup> > pickups;
+
+    std::string characterName;
+    bool bossSpawned{false};
 
 public:
     explicit GameState(Game &game);
