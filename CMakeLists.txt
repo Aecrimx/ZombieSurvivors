@@ -70,6 +70,7 @@ add_executable(${MAIN_EXECUTABLE_NAME}
         src/Weapon.h
         src/Player.cpp
         src/Player.h
+        src/Pickup.h
         src/Projectile.cpp
         src/Projectile.h
         src/Zombie.cpp

@@ -27,6 +27,7 @@ private:
     std::string characterName;
 
     State *gameState;
+    bool mouseWasPressed = false;
 
     void updateLayout(int windowWidth, int windowHeight);
 

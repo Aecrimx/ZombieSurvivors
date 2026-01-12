@@ -1,5 +1,6 @@
 #include "PauseState.h"
 #include "Game.h"
+#include "MenuState.h"
 #include <iostream>
 
 PauseState::PauseState(Game &gameRef, State *underlyingState)
@@ -65,17 +66,25 @@ void PauseState::update(float dt) {
         exitText->setFillColor(exitHovered ? sf::Color::Red : sf::Color::White);
     }
 
-    if (sf::Mouse::isButtonPressed(sf::Mouse::Button::Left)) {
+    bool mouseCurrentlyPressed =
+            sf::Mouse::isButtonPressed(sf::Mouse::Button::Left);
+    if (mouseWasPressed && !mouseCurrentlyPressed) {
         if (continueHovered) {
             game.popState();
+            return;
         } else if (exitHovered) {
             game.popState();
-            game.popState();
+            game.scheduleReplace(std::make_unique<MenuState>(
+                game));
+            return;
         }
     }
 
+    mouseWasPressed = mouseCurrentlyPressed;
+
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Escape)) {
         game.popState();
+        return;
     }
 }
 

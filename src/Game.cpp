@@ -41,7 +41,7 @@ void Game::pushState(std::unique_ptr<State> state) {
 }
 
 void Game::popState() {
-    if (!states.empty()) states.pop();
+    pendingPops++;
 }
 
 sf::RenderWindow &Game::getWindow() { return window; }
@@ -49,7 +49,6 @@ ResourceManager &Game::getResourceManager() { return resourceManager; }
 
 void Game::run() {
     sf::Clock clock;
-    // sf::View view = window.getDefaultView();
 
     while (window.isOpen()) {
         float dt = clock.restart().asSeconds();
@@ -71,8 +70,7 @@ void Game::run() {
             } else if (event->is<sf::Event::KeyPressed>()) {
                 const auto *keyPressed = event->getIf<sf::Event::KeyPressed>();
                 if (keyPressed->scancode == sf::Keyboard::Scancode::Escape) {
-                    shouldExit = true; // probabil ar trb sa fie in states ca sa am pauza
-                    // dar acm meh
+                    shouldExit = true;
                 } else if (keyPressed->scancode == sf::Keyboard::Scancode::F) {
                     if (fullscreen_toggle == 0) {
                         fullscreen_toggle = 1;
@@ -98,16 +96,23 @@ void Game::run() {
         states.top()->handleInput();
         states.top()->update(dt);
 
+        while (pendingPops > 0 && !states.empty()) {
+            states.pop();
+            pendingPops--;
+        }
 
         if (hasPendingReplace) {
-            if (!states.empty()) states.pop();
+            if (!states.empty())
+                states.pop();
             states.push(std::move(pendingState));
             hasPendingReplace = false;
             states.top()->Resize(width, height);
         }
 
         window.clear();
-        states.top()->draw();
+        if (!states.empty()) {
+            states.top()->draw();
+        }
         window.display();
     }
 }

@@ -132,7 +132,7 @@ void GameState::update(float dt) {
     if (player->isDead()) {
         int score = player->getLevel() * 100;
         game.scheduleReplace(std::make_unique<GameOverState>(
-            game, score, characterName, false, this));
+            game, score, characterName, false, nullptr)); // inainte nu pasam nullptr which fucked everything up
         return;
     }
 
@@ -247,7 +247,7 @@ void GameState::update(float dt) {
                              playerBounds.position.y + playerBounds.size.y >
                              enemyBounds.position.y);
             if (collides) {
-                player->takeDamage(10.f);
+                player->takeDamage(enemy->getDamage());
                 contactDamageCooldown = 1.0f;
                 break;
             }
@@ -307,7 +307,7 @@ void GameState::update(float dt) {
             if (dynamic_cast<BigZombieBoss *>(it->get())) {
                 int score = player->getLevel() * 100;
                 game.scheduleReplace(std::make_unique<GameOverState>(
-                    game, score, characterName, true, this));
+                    game, score, characterName, true, nullptr)); // la fel ca mai sus
                 return;
             }
 
@@ -329,6 +329,8 @@ void GameState::update(float dt) {
     if (hud && player) {
         hud->update(*player, gameTimer);
     }
+
+    escWasPressed = sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Escape);
 }
 
 void GameState::draw() {
@@ -347,5 +349,5 @@ void GameState::draw() {
         player->draw(game.getWindow());
 
     if (hud && player)
-        hud->draw(game.getWindow(), *player); // Pass player reference
+        hud->draw(game.getWindow(), *player);
 }

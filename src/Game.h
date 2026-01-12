@@ -25,10 +25,12 @@ class Game {
     int fullscreen_toggle;
     bool shouldExit = false;
     /*
-     * Cand MenuState da pop la el insusi si da push la Gamestate folosim intermediarul pending pt a nu da segfault
+     * Cand MenuState da pop la el insusi si da push la Gamestate folosim
+     * intermediarul pending pt a nu da segfault
      */
     std::unique_ptr<State> pendingState;
     bool hasPendingReplace = false;
+    int pendingPops = 0;
 
 public:
     Game(int width, int height, const std::string &title);
@@ -51,8 +53,7 @@ public:
 
     friend std::ostream &operator<<(std::ostream &os, const Game &obj) {
         return os << "[Game]"
-               << "title: " << obj.title
-               << " width: " << obj.width
+               << "title: " << obj.title << " width: " << obj.width
                << " height: " << obj.height
                << " fullscreen_toggle: " << obj.fullscreen_toggle
                << " shouldExit: " << obj.shouldExit;

@@ -105,16 +105,23 @@ void GameOverState::update(float dt) {
         menuText->setFillColor(menuHovered ? sf::Color::Yellow : sf::Color::White);
     }
 
-    if (sf::Mouse::isButtonPressed(sf::Mouse::Button::Left)) {
+    bool mouseCurrentlyPressed =
+            sf::Mouse::isButtonPressed(sf::Mouse::Button::Left);
+
+    if (mouseWasPressed && !mouseCurrentlyPressed) {
         if (retryHovered) {
             // meh is basically the same to be repaired later
             game.popState();
             game.scheduleReplace(std::make_unique<MenuState>(game));
+            return;
         } else if (menuHovered) {
             game.popState();
             game.scheduleReplace(std::make_unique<MenuState>(game));
+            return;
         }
     }
+
+    mouseWasPressed = mouseCurrentlyPressed;
 }
 
 void GameOverState::draw() {
