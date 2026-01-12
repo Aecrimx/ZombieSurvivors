@@ -6,35 +6,35 @@
 #include <cmath>
 #include <iostream>
 
-class SoulScream : public Projectile {
-private:
-    float lifetime;
-    float maxLifetime;
-    float startScale;
-    float endScale;
-
-public:
-    SoulScream(const sf::Texture &texture, sf::Vector2f startPos,
-               sf::Vector2f dir, float spd, float dmg)
-        : Projectile(texture, startPos, dir, spd, dmg, false), lifetime(0.f),
-          maxLifetime(4.f), startScale(0.3f), endScale(1.2f) {
-        sprite.setScale({startScale, startScale});
-    }
-
-    void update(float dt) override {
-        lifetime += dt;
-
-        float progress = std::min(lifetime / maxLifetime, 1.f);
-        float currentScale = startScale + (endScale - startScale) * progress;
-        sprite.setScale({currentScale, currentScale});
-
-        if (lifetime >= maxLifetime) {
-            dead = true;
-        }
-
-        sprite.move(direction * speed * dt);
-    }
-};
+// class SoulScream : public Projectile {
+// private:
+//     float lifetime;
+//     float maxLifetime;
+//     float startScale;
+//     float endScale;
+//
+// public:
+//     SoulScream(const sf::Texture &texture, sf::Vector2f startPos,
+//                sf::Vector2f dir, float spd, float dmg)
+//         : Projectile(texture, startPos, dir, spd, dmg, false), lifetime(0.f),
+//           maxLifetime(4.f), startScale(0.3f), endScale(1.2f) {
+//         sprite.setScale({startScale, startScale});
+//     }
+//
+//     void update(float dt) override {
+//         lifetime += dt;
+//
+//         float progress = std::min(lifetime / maxLifetime, 1.f);
+//         float currentScale = startScale + (endScale - startScale) * progress;
+//         sprite.setScale({currentScale, currentScale});
+//
+//         if (lifetime >= maxLifetime) {
+//             dead = true;
+//         }
+//
+//         sprite.move(direction * speed * dt);
+//     }
+// };
 
 class SoulLantern : public Weapon {
 public:

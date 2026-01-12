@@ -112,9 +112,9 @@ add_executable(${MAIN_EXECUTABLE_NAME}
         src/BoneShooter.h
         src/MenuState.cpp
         src/MenuState.h
-#        src/SaveData.h
-#        src/SaveManager.cpp
-#        src/SaveManager.h
+        src/SaveData.h
+        src/SaveManager.cpp
+        src/SaveManager.h
 )
 
 # NOTE: Add all defined targets (e.g. executables, libraries, etc. )

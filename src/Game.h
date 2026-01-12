@@ -14,38 +14,49 @@
 class State;
 
 class Game {
-  sf::RenderWindow window;
-  ResourceManager resourceManager;
-  std::stack<std::unique_ptr<State>> states;
+    sf::RenderWindow window;
+    ResourceManager resourceManager;
+    std::stack<std::unique_ptr<State> > states;
 
-  std::string title;
+    std::string title;
 
-  int width, height;
+    int width, height;
 
-  int fullscreen_toggle;
-  bool shouldExit = false;
+    int fullscreen_toggle;
+    bool shouldExit = false;
+    /*
+     * Cand MenuState da pop la el insusi si da push la Gamestate folosim intermediarul pending pt a nu da segfault
+     */
+    std::unique_ptr<State> pendingState;
+    bool hasPendingReplace = false;
 
 public:
-  Game(int width, int height, const std::string &title);
+    Game(int width, int height, const std::string &title);
 
-  void run();
+    void run();
 
-  void pushState(std::unique_ptr<State> state);
-  void popState();
+    void pushState(std::unique_ptr<State> state);
 
-  sf::RenderWindow &getWindow();
-  ResourceManager &getResourceManager();
-  sf::View LetterboxView(sf::View view, int winWidth, int winHeight);
-  sf::Vector2f getWindowSize() const;
+    void popState();
 
-friend std::ostream & operator<<(std::ostream &os, const Game &obj) {
-    return os << "[Game]"
-           << "title: " << obj.title
-           << " width: " << obj.width
-           << " height: " << obj.height
-           << " fullscreen_toggle: " << obj.fullscreen_toggle
-           << " shouldExit: " << obj.shouldExit;
-  }
+    void scheduleReplace(std::unique_ptr<State> state);
+
+    sf::RenderWindow &getWindow();
+
+    ResourceManager &getResourceManager();
+
+    sf::View LetterboxView(sf::View view, int winWidth, int winHeight);
+
+    sf::Vector2f getWindowSize() const;
+
+    friend std::ostream &operator<<(std::ostream &os, const Game &obj) {
+        return os << "[Game]"
+               << "title: " << obj.title
+               << " width: " << obj.width
+               << " height: " << obj.height
+               << " fullscreen_toggle: " << obj.fullscreen_toggle
+               << " shouldExit: " << obj.shouldExit;
+    }
 };
 
 #endif // OOP_GAME_H

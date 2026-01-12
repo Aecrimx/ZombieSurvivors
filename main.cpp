@@ -3,12 +3,11 @@
 #include <iostream>
 
 int main() {
+    Game game(1200, 800, "Zombie Survivors");
 
-  Game game(1200, 800, "Zombie Survivors");
+    game.pushState(std::make_unique<MenuState>(game));
 
-  game.pushState(std::make_unique<MenuState>(game));
+    game.run();
 
-  game.run();
-
-  return 0;
+    return 0;
 }

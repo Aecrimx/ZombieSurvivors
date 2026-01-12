@@ -10,11 +10,9 @@ MenuState::MenuState(Game &gameRef)
     }
 
     //title stuff
-    titleText.setFont(font);
-    titleText.setString("ZOMBIE SURVIVORS");
-    titleText.setCharacterSize(60);
-    titleText.setFillColor(sf::Color::White);
-    titleText.setStyle(sf::Text::Bold);
+    titleText = std::make_unique<sf::Text>(font, "ZOMBIE SURVIVORS", 60);
+    titleText->setFillColor(sf::Color::White);
+    titleText->setStyle(sf::Text::Bold);
 
     setupCharacters();
 
@@ -33,74 +31,66 @@ void MenuState::setupCharacters() {
 
 
     CharacterCard wizard;
-    wizard.name = "Hocus (Wizard)";
+    wizard.name = "Hocus ( Amazing Wizard )";
     wizard.textureName = "wizard";
     wizard.data =
             CharacterData("Hocus", "wizard", 125.f, 125.f, "Fire wand", "fire_wand");
     wizard.unlocked = saveManager.isCharacterUnlocked("wizard");
     wizard.highScore = saveManager.getHighScore("wizard");
-    wizard.sprite.setTexture(res.getTexture("wizard"));
-    wizard.sprite.setScale({0.3f, 0.3f});
+    wizard.sprite = std::make_unique<sf::Sprite>(res.getTexture("wizard"));
+    wizard.sprite->setScale({0.3f, 0.3f});
 
     CharacterCard demon;
-    demon.name = "Azoth (Demon)";
+    demon.name = "Azoth ( Otherworldy Demon )";
     demon.textureName = "demon";
     demon.data = CharacterData("Azoth", "demon", 150.f, 100.f, "Demonic Book",
                                "demonic_book");
     demon.unlocked = saveManager.isCharacterUnlocked("demon");
     demon.highScore = saveManager.getHighScore("demon");
-    demon.sprite.setTexture(res.getTexture("demon"));
-    demon.sprite.setScale({0.3f, 0.3f});
+    demon.sprite = std::make_unique<sf::Sprite>(res.getTexture("demon"));
+    demon.sprite->setScale({0.3f, 0.3f});
 
     CharacterCard skull;
-    skull.name = "Skull (Undead)";
+    skull.name = "Flying Skull ( How does it do that...? )";
     skull.textureName = "spinning_skull";
     skull.data = CharacterData("Flying Skull", "spinning_skull", 110.f, 100.f,
                                "Skull Shooter", "skull");
     skull.unlocked = saveManager.isCharacterUnlocked("flying_skull");
     skull.highScore = saveManager.getHighScore("flying_skull");
-    skull.sprite.setTexture(res.getTexture("spinning_skull"));
-    skull.sprite.setScale({0.2f, 0.2f});
+    skull.sprite = std::make_unique<sf::Sprite>(res.getTexture("spinning_skull"));
+    skull.sprite->setScale({0.2f, 0.2f});
 
     // setup character cards
     for (auto *card: {&wizard, &demon, &skull}) {
-        card->nameText.setFont(font);
-        card->nameText.setCharacterSize(24);
-        card->nameText.setFillColor(sf::Color::White);
-        card->nameText.setString(card->name);
+        card->nameText = std::make_unique<sf::Text>(font, card->name, 48);
+        card->nameText->setFillColor(sf::Color::White);
 
-        card->statsText.setFont(font);
-        card->statsText.setCharacterSize(18);
-        card->statsText.setFillColor(sf::Color(200, 200, 200));
         std::string stats =
                 "HP: " + std::to_string((int) card->data.maxHealth) +
                 " | Speed: " + std::to_string((int) card->data.moveSpeed);
-        card->statsText.setString(stats);
+        card->statsText = std::make_unique<sf::Text>(font, stats, 36);
+        card->statsText->setFillColor(sf::Color(200, 200, 200));
 
-        card->scoreText.setFont(font);
-        card->scoreText.setCharacterSize(18);
-        card->scoreText.setFillColor(sf::Color::Yellow);
-        card->scoreText.setString("High Score: " + std::to_string(card->highScore));
+        card->scoreText = std::make_unique<sf::Text>(font, "High Score: " + std::to_string(card->highScore), 36);
+        card->scoreText->setFillColor(sf::Color::Yellow);
 
-        card->lockedText.setFont(font);
-        card->lockedText.setCharacterSize(30);
-        card->lockedText.setFillColor(sf::Color::Red);
-        card->lockedText.setString("LOCKED");
-        card->lockedText.setStyle(sf::Text::Bold);
+        card->lockedText = std::make_unique<sf::Text>(font, "\nLOCKED", 30);
+        card->lockedText->setFillColor(sf::Color::Red);
+        card->lockedText->setStyle(sf::Text::Bold);
 
         card->cardBg.setFillColor(sf::Color(50, 50, 50, 200));
         card->cardBg.setOutlineThickness(3.f);
         card->cardBg.setOutlineColor(sf::Color(100, 100, 100));
     }
 
-    characters.push_back(wizard);
-    characters.push_back(demon);
-    characters.push_back(skull);
+    characters.push_back(std::move(wizard));
+    characters.push_back(std::move(demon));
+    characters.push_back(std::move(skull));
 }
 
 void MenuState::updateLayout(int windowWidth, int windowHeight) {
-    sf::FloatRect titleBounds = titleText.getGlobalBounds();
-    titleText.setPosition({(windowWidth - titleBounds.size.x) / 2.f, 50.f});
+    sf::FloatRect titleBounds = titleText->getGlobalBounds();
+    titleText->setPosition({(windowWidth - titleBounds.size.x) / 2.f, 50.f});
 
     float cardWidth = 250.f;
     float cardHeight = 350.f;
@@ -118,22 +108,26 @@ void MenuState::updateLayout(int windowWidth, int windowHeight) {
         card.mouse_bounds = card.cardBg.getGlobalBounds();
 
         //pozitie sprite pt cards
-        sf::FloatRect spriteBounds = card.sprite.getGlobalBounds();
-        card.sprite.setPosition({
-            x + (cardWidth - spriteBounds.size.x) / 2.f,
-            startY + 20.f
-        });
+        if (card.sprite) {
+            sf::FloatRect spriteBounds = card.sprite->getGlobalBounds();
+            card.sprite->setPosition({
+                x + (cardWidth - spriteBounds.size.x) / 2.f,
+                startY + 20.f
+            });
+        }
 
-        card.nameText.setPosition({x + 10.f, startY + 150.f});
-        card.statsText.setPosition({x + 10.f, startY + 190.f});
+        if (card.nameText) card.nameText->setPosition({x + 10.f, startY + 150.f});
+        if (card.statsText) card.statsText->setPosition({x + 10.f, startY + 190.f});
 
-        card.scoreText.setPosition({x + 10.f, startY + 220.f});
+        if (card.scoreText) card.scoreText->setPosition({x + 10.f, startY + 220.f});
 
-        sf::FloatRect lockedBounds = card.lockedText.getGlobalBounds();
-        card.lockedText.setPosition({
-            x + (cardWidth - lockedBounds.size.x) / 2.f,
-            startY + (cardHeight / 2.f)
-        });
+        if (card.lockedText) {
+            sf::FloatRect lockedBounds = card.lockedText->getGlobalBounds();
+            card.lockedText->setPosition({
+                x + (cardWidth - lockedBounds.size.x) / 2.f,
+                startY + (cardHeight / 2.f)
+            });
+        }
     }
 }
 
@@ -159,29 +153,30 @@ void MenuState::update(float dt) {
         if (hoveredIndex != -1 && selectedIndex == -1) {
             selectedIndex = hoveredIndex;
 
-            game.popState();
-            game.pushState(
+            game.scheduleReplace(
                 std::make_unique<GameState>(game, characters[selectedIndex].data));
+            return;
         }
     }
 }
 
 void MenuState::draw() {
-    game.getWindow().clear(sf::Color(255, 255, 255));
+    game.getWindow().clear(sf::Color(0, 0, 0));
 
-    game.getWindow().draw(titleText);
+    if (titleText)
+        game.getWindow().draw(*titleText);
 
 
     for (const auto &card: characters) {
         game.getWindow().draw(card.cardBg);
-        game.getWindow().draw(card.sprite);
-        game.getWindow().draw(card.nameText);
+        if (card.sprite) game.getWindow().draw(*card.sprite);
+        if (card.nameText) game.getWindow().draw(*card.nameText);
 
         if (card.unlocked) {
-            game.getWindow().draw(card.statsText);
-            game.getWindow().draw(card.scoreText);
+            if (card.statsText) game.getWindow().draw(*card.statsText);
+            if (card.scoreText) game.getWindow().draw(*card.scoreText);
         } else {
-            game.getWindow().draw(card.lockedText);
+            if (card.lockedText) game.getWindow().draw(*card.lockedText);
         }
     }
 }

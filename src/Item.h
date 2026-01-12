@@ -3,7 +3,7 @@
 
 #include <SFML/Graphics.hpp>
 #include <string>
-
+#include <memory>
 
 class Player;
 
@@ -11,7 +11,7 @@ class Item {
 protected:
     std::string name;
     int level; // 3 levele max
-    sf::Sprite iconSprite;
+    std::unique_ptr<sf::Sprite> iconSprite;
 
 public:
     Item(const std::string &itemName, int itemLevel = 1)
@@ -32,9 +32,9 @@ public:
     int getLevel() const { return level; }
     std::string getName() const { return name; }
 
-    //ui stuff
-    sf::Sprite getIcon() const { return iconSprite; }
-    void setIcon(const sf::Texture &texture) { iconSprite.setTexture(texture); }
+    // ui stuff
+    const sf::Sprite* getIcon() const { return iconSprite.get(); }
+    void setIcon(const sf::Texture &texture) { iconSprite = std::make_unique<sf::Sprite>(texture); }
 };
 
 #endif // OOP_ITEM_H

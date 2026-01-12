@@ -5,26 +5,27 @@
 #include "SaveManager.h"
 #include "State.h"
 #include <SFML/Graphics.hpp>
+#include <memory>
 #include <vector>
 
 class MenuState : public State {
 private:
     sf::Font font;
-    sf::Text titleText;
+    std::unique_ptr<sf::Text> titleText;
 
     struct CharacterCard {
         std::string name;
         std::string textureName;
-        CharacterData data;
-        bool unlocked;
-        int highScore;
+        CharacterData data{"","",0.f,0.f,"",""};
+        bool unlocked{false};
+        int highScore{0};
 
-        sf::Sprite sprite;
+        std::unique_ptr<sf::Sprite> sprite;
         sf::RectangleShape cardBg;
-        sf::Text nameText;
-        sf::Text statsText;
-        sf::Text scoreText;
-        sf::Text lockedText;
+        std::unique_ptr<sf::Text> nameText;
+        std::unique_ptr<sf::Text> statsText;
+        std::unique_ptr<sf::Text> scoreText;
+        std::unique_ptr<sf::Text> lockedText;
 
         sf::FloatRect mouse_bounds;
     };
