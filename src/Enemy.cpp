@@ -4,3 +4,7 @@
 
 #include "Enemy.h"
 
+std::ostream &operator<<(std::ostream &os, const Enemy &obj) {
+    obj.print(os);
+    return os;
+}

@@ -25,7 +25,7 @@ public:
     virtual void Resize(int w, int h) = 0; // pt fullscreen
 
     friend std::ostream &operator<<(std::ostream &os, const State & /*obj*/) {
-        return os << "[State]" << ": din pacate si eu sunt doar o clasa abstracta si nu am ce afisa momentan";
+        return os << "[State]";
     }
 };
 

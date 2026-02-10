@@ -7,31 +7,24 @@
 
 class Zombie : public Enemy {
 public:
-    Zombie(sf::Texture &texture, sf::Vector2f startPos)
-        : Enemy(texture, 20.f, 10.f, 125.f) {
-        sprite.setOrigin({texture.getSize().x / 2.f, texture.getSize().y / 2.f});
-        sprite.setPosition(startPos);
-        sprite.setScale({0.2f, 0.2f});
+    Zombie(sf::Texture &texture, sf::Vector2f startPos);
+
+    Zombie(const Zombie &other);
+    Zombie &operator=(const Zombie &other);
+
+    Zombie(Zombie &&other) noexcept = default;
+    Zombie &operator=(Zombie &&other) noexcept = default;
+
+    friend void swap(Zombie &first, Zombie &second) noexcept {
+        using std::swap;
+        swap(static_cast<Enemy &>(first), static_cast<Enemy &>(second));
     }
 
-    void update(float dt, sf::Vector2f playerPos) override {
-        sf::Vector2f dir = playerPos - sprite.getPosition();
-        float length = std::sqrt(dir.x * dir.x + dir.y * dir.y);
+    Enemy *clone() const override;
 
-        if (length > 0) {
-            dir /= length;
-            sprite.move(dir * speed * dt);
+    void update(float dt, sf::Vector2f playerPos) override;
 
-            if (dir.x < 0)
-                sprite.setScale({-0.2f, 0.2f});
-            else
-                sprite.setScale({0.2f, 0.2f});
-        }
-    }
-
-    friend std::ostream &operator<<(std::ostream &os, const Zombie &obj) {
-        return os << static_cast<const Enemy &>(obj);
-    }
+    friend std::ostream &operator<<(std::ostream &os, const Zombie &obj);
 };
 
 #endif // OOP_ZOMBIE_H

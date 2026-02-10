@@ -2,8 +2,8 @@
 #define OOP_ITEM_H
 
 #include <SFML/Graphics.hpp>
-#include <string>
 #include <memory>
+#include <string>
 
 class Player;
 
@@ -14,27 +14,35 @@ protected:
     std::unique_ptr<sf::Sprite> iconSprite;
 
 public:
-    Item(const std::string &itemName, int itemLevel = 1)
-        : name(itemName), level(itemLevel) {
-    }
+    Item(const std::string &itemName, int itemLevel = 1);
 
-    virtual ~Item() = default;
+    virtual ~Item();
+
+    Item(const Item &other);
+
+    Item &operator=(const Item &other);
 
     virtual void applyEffect(Player &player) = 0;
 
-    void levelUp() {
-        if (level < 3) {
-            level++;
-        }
-    }
+    void levelUp();
 
-    bool canLevelUp() const { return level < 3; }
-    int getLevel() const { return level; }
-    std::string getName() const { return name; }
+    bool canLevelUp() const;
+
+    int getLevel() const;
+
+    std::string getName() const;
 
     // ui stuff
-    const sf::Sprite* getIcon() const { return iconSprite.get(); }
-    void setIcon(const sf::Texture &texture) { iconSprite = std::make_unique<sf::Sprite>(texture); }
+    const sf::Sprite *getIcon() const;
+
+    void setIcon(const sf::Texture &texture);
+
+    virtual Item *clone() const = 0;
+
+    friend std::ostream &operator<<(std::ostream &os, const Item &obj);
+
+private:
+    virtual void print(std::ostream &os) const = 0;
 };
 
 #endif // OOP_ITEM_H

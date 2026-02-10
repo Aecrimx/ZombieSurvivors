@@ -14,39 +14,43 @@ class Projectile {
 
 public:
     Projectile(const sf::Texture &texture, sf::Vector2f pos, sf::Vector2f dir,
-               float speed, float dmg, bool isHostile = false)
-        : sprite(texture), velocity(0, 0), damage(dmg), life_time(3.0f), hostile(isHostile) {
-        // ori scale manual de sprite ori scale dat de img size momentan drc
-        sprite.setScale({3.5f, 3.5f});
+               float speed, float dmg, bool isHostile = false);
 
-        sprite.setOrigin({texture.getSize().x / 2.f, texture.getSize().y / 2.f});
+    Projectile(const Projectile &other);
+    Projectile &operator=(const Projectile &other);
 
-        sprite.setPosition(pos);
-        velocity = dir * speed;
+    Projectile(Projectile &&other) noexcept = default;
+    Projectile &operator=(Projectile &&other) noexcept = default;
 
-        float angleDeg = std::atan2(dir.y, dir.x) * 180.f / 3.14159f;
-        sprite.setRotation(sf::degrees(angleDeg));
+    friend void swap(Projectile &first, Projectile &second) noexcept {
+        using std::swap;
+        swap(first.sprite, second.sprite);
+        swap(first.velocity, second.velocity);
+        swap(first.damage, second.damage);
+        swap(first.life_time, second.life_time);
+        swap(first.hostile, second.hostile);
     }
 
-    void update(float dt) {
-        sprite.move(velocity * dt);
-        life_time -= dt;
-    }
+    void update(float dt);
 
-    void draw(sf::RenderWindow &window) const { window.draw(sprite); }
+    void draw(sf::RenderWindow &window) const;
 
-    bool isDead() const { return life_time <= 0.f; }
-    sf::FloatRect getBounds() const { return sprite.getGlobalBounds(); }
-    float getDamage() const { return damage; }
+    bool isDead() const;
+
+    sf::FloatRect getBounds() const;
+
+    float getDamage() const;
+
     // void Destroy() {life_time = -1.f;}
 
-    bool isHostile() const { return hostile; }
+    bool isHostile() const;
 
-    friend std::ostream &operator<<(std::ostream &os, const Projectile &obj) {
-        return os
-               << "velocity: " << obj.velocity.x << ", " << obj.velocity.y
-               << " damage: " << obj.damage
-               << " life_time: " << obj.life_time;
+    friend std::ostream &operator<<(std::ostream &os, const Projectile &obj);
+
+private:
+    virtual void print(std::ostream &os) const {
+        os << "[Projectile] damage: " << damage << " lifetime: " << life_time
+                << " hostile: " << (hostile ? "yes" : "no");
     }
 };
 

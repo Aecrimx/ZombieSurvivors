@@ -42,11 +42,11 @@ void LevelUpState::generateOptions() {
 
     std::vector<PossibleUpgrade> allUpgrades;
 
-    auto items = player->getItems();
+    const auto &items = player->getItems();
     bool hasArmor = false, hasBoots = false, hasCooldown = false,
             hasHeart = false;
 
-    for (const auto *item: items) {
+    for (const auto &item: items) {
         if (item->getName() == "Armor")
             hasArmor = true;
         if (item->getName() == "Boots")
@@ -58,33 +58,36 @@ void LevelUpState::generateOptions() {
     }
 
     if (!hasArmor && items.size() < 3) {
-        allUpgrades.push_back({
-            "Armor", "+10% Damage Reduction",
-            [](Player &p) { p.addItem(new Armor()); }, true
-        });
+        allUpgrades.push_back(
+            {
+                "Armor", "+10% Damage Reduction",
+                [](Player &p) { p.addItem(std::make_unique<Armor>()); }, true
+            });
     }
     if (!hasBoots && items.size() < 3) {
-        allUpgrades.push_back({
-            "Boots", "+10% Movement Speed",
-            [](Player &p) { p.addItem(new Boots()); }, true
-        });
+        allUpgrades.push_back(
+            {
+                "Boots", "+10% Movement Speed",
+                [](Player &p) { p.addItem(std::make_unique<Boots>()); }, true
+            });
     }
     if (!hasCooldown && items.size() < 3) {
-        allUpgrades.push_back({
-            "Cooldown Gauntlet", "+16.67% Cooldown Reduction",
-            [](Player &p) { p.addItem(new CooldownGauntlet()); },
-            true
-        });
+        allUpgrades.push_back(
+            {
+                "Cooldown Gauntlet", "+16.67% Cooldown Reduction",
+                [](Player &p) { p.addItem(std::make_unique<CooldownGauntlet>()); },
+                true
+            });
     }
     if (!hasHeart && items.size() < 3) {
-        allUpgrades.push_back({
-            "Heart Crystal", "+10 Max HP, +0.5 HP/sec Regen",
-            [](Player &p) { p.addItem(new HeartCrystal()); },
-            true
-        });
+        allUpgrades.push_back(
+            {
+                "Heart Crystal", "+10 Max HP, +0.5 HP/sec Regen",
+                [](Player &p) { p.addItem(std::make_unique<HeartCrystal>()); }, true
+            });
     }
 
-    for (auto *item: items) {
+    for (auto &item: items) {
         if (item->canLevelUp()) {
             std::string itemName = item->getName();
             allUpgrades.push_back({
@@ -92,7 +95,7 @@ void LevelUpState::generateOptions() {
                 "Upgrade " + itemName + " to Level " +
                 std::to_string(item->getLevel() + 1),
                 [itemName](Player &p) {
-                    for (auto *i: p.getItems()) {
+                    for (auto &i: p.getItems()) {
                         if (i->getName() == itemName &&
                             i->canLevelUp()) {
                             i->levelUp();
@@ -105,11 +108,11 @@ void LevelUpState::generateOptions() {
         }
     }
 
-    auto weapons = player->getWeapons();
+    const auto &weapons = player->getWeapons();
     if (weapons.size() < 3) {
         bool hasMagicGun = false, hasSoulLantern = false, hasFireWand = false,
                 hasDemonicBook = false;
-        for (const auto *weapon: weapons) {
+        for (const auto &weapon: weapons) {
             if (weapon->getName() == "Magic Gun")
                 hasMagicGun = true;
             if (weapon->getName() == "Soul Lantern")
@@ -121,47 +124,46 @@ void LevelUpState::generateOptions() {
         }
 
         if (!hasMagicGun) {
-            allUpgrades.push_back({
-                "Magic Gun",
-                "Shoots lasers in a clock-wise pattern.",
-                [this](Player &p) {
-                    MagicGun weapon(game.getResourceManager());
-                    p.addWeapon(weapon);
-                },
-                true
-            });
+            allUpgrades.push_back(
+                {
+                    "Magic Gun", "Shoots lasers in a clock-wise pattern.",
+                    [this](Player &p) {
+                        p.addWeapon(std::make_unique<MagicGun>(game.getResourceManager()));
+                    },
+                    true
+                });
         }
         if (!hasSoulLantern) {
-            allUpgrades.push_back({
-                "Soul Lantern",
-                "Shoots a soul scream in a direction.",
-                [this](Player &p) {
-                    SoulLantern weapon(game.getResourceManager());
-                    p.addWeapon(weapon);
-                },
-                true
-            });
+            allUpgrades.push_back(
+                {
+                    "Soul Lantern", "Shoots a soul scream in a direction.",
+                    [this](Player &p) {
+                        p.addWeapon(
+                            std::make_unique<SoulLantern>(game.getResourceManager()));
+                    },
+                    true
+                });
         }
         if (!hasFireWand) {
-            allUpgrades.push_back({
-                "Fire wand", "Shoots fireballs towards enemies.",
-                [this](Player &p) {
-                    FireWand weapon(game.getResourceManager());
-                    p.addWeapon(weapon);
-                },
-                true
-            });
+            allUpgrades.push_back(
+                {
+                    "Fire wand", "Shoots fireballs towards enemies.",
+                    [this](Player &p) {
+                        p.addWeapon(std::make_unique<FireWand>(game.getResourceManager()));
+                    },
+                    true
+                });
         }
         if (!hasDemonicBook) {
-            allUpgrades.push_back({
-                "Demonic Book",
-                "Damaging aura that periodically damages enemies.",
-                [this](Player &p) {
-                    DemonicBook weapon(game.getResourceManager());
-                    p.addWeapon(weapon);
-                },
-                true
-            });
+            allUpgrades.push_back(
+                {
+                    "Demonic Book", "Damaging aura that periodically damages enemies.",
+                    [this](Player &p) {
+                        p.addWeapon(
+                            std::make_unique<DemonicBook>(game.getResourceManager()));
+                    },
+                    true
+                });
         }
     }
 

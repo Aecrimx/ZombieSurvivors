@@ -108,6 +108,12 @@ void GameState::Resize(int w, int h) {
     }
 }
 
+std::vector<Projectile> & GameState::getProjectiles() { return projectiles; }
+
+std::ostream & operator<<(std::ostream &os, const GameState &) {
+    return os << "[GameState]" << '\n';
+}
+
 void GameState::handleInput() {
     bool escCurrentlyPressed =
             sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Escape);
@@ -325,7 +331,6 @@ void GameState::update(float dt) {
         }
     }
 
-    // Update HUD with player data and timer
     if (hud && player) {
         hud->update(*player, gameTimer);
     }

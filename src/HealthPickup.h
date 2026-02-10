@@ -7,19 +7,15 @@
 
 class HealthPickup : public Pickup {
 private:
-  float healAmount;
+    float healAmount;
 
 public:
-  HealthPickup(const sf::Texture &texture, sf::Vector2f spawnPos,
-               float heal = 0.25f)
-      : Pickup(texture, spawnPos, 150.f), healAmount(heal) {}
+    HealthPickup(const sf::Texture &texture, sf::Vector2f spawnPos,
+                 float heal = 0.25f);
 
-  void onCollect(Player &player) override {
-    float maxHealth = player.getMaxHealth();
-    player.heal(maxHealth * healAmount); // Heal 25% of max health
-  }
+    void onCollect(Player &player) override;
 
-  float getHealAmount() const { return healAmount; }
+    float getHealAmount() const;
 };
 
 #endif // OOP_HEALTHPICKUP_H

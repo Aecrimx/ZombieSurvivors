@@ -10,9 +10,17 @@ public:
     }
 
     void applyEffect(Player &player) override {
-        //10% damage reduction pt fiecare level up
-        float reduction = level * 0.1f;
+        // 10% damage reduction pt fiecare level up
+        float reduction = static_cast<float>(level) * 0.1f;
         player.setDamageReduction(reduction);
+    }
+
+    Item *clone() const override { return new Armor(*this); }
+
+private:
+    void print(std::ostream &os) const override {
+        os << "[Armor] Level: " << level << " (Damage Reduction: " << (level * 10)
+                << "%)";
     }
 };
 

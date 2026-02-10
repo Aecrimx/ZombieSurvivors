@@ -110,7 +110,6 @@ void GameOverState::update(float dt) {
 
     if (mouseWasPressed && !mouseCurrentlyPressed) {
         if (retryHovered) {
-            // meh is basically the same to be repaired later
             game.popState();
             game.scheduleReplace(std::make_unique<MenuState>(game));
             return;

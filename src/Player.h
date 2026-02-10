@@ -6,115 +6,109 @@
 #include "ResourceManager.h"
 #include "Weapon.h"
 #include <SFML/Graphics.hpp>
+#include <memory>
 #include <string>
 #include <vector>
 
-// Forward declaration for Item class
 class Item;
 
 struct CharacterData {
-  std::string name;
-  std::string texture_name;
-  float moveSpeed;
-  float maxHealth;
-  std::string startingWeapon;
-  std::string Weapon_sprite;
+    std::string name;
+    std::string texture_name;
+    float moveSpeed;
+    float maxHealth;
+    std::string startingWeapon;
+    std::string Weapon_sprite;
 
-  CharacterData(const std::string &n, const std::string &tex, float speed,
-                float hp, const std::string &weapon, const std::string &wSprite)
-      : name(n), texture_name(tex), moveSpeed(speed), maxHealth(hp),
-        startingWeapon(weapon), Weapon_sprite(wSprite) {}
+    CharacterData(const std::string &n, const std::string &tex, float speed,
+                  float hp, const std::string &weapon, const std::string &wSprite)
+        : name(n), texture_name(tex), moveSpeed(speed), maxHealth(hp),
+          startingWeapon(weapon), Weapon_sprite(wSprite) {
+    }
 };
 
 class Player {
-  sf::Sprite sprite;
-  std::vector<Weapon *> weapons;
-  std::vector<Item *> items;
+    sf::Sprite sprite;
+    std::vector<std::unique_ptr<Weapon> > weapons;
+    std::vector<std::unique_ptr<Item> > items;
 
-  float speed;
-  float baseSpeed; // Store base speed for item calculations
-  float maxHealth;
-  float currentHealth;
-  float healthRegen; // HP per second
+    float speed;
+    float baseSpeed;
+    float maxHealth;
+    float currentHealth;
+    float healthRegen; //hp per sec
 
-  // Leveling system
-  int level;
-  float currentXP;
-  float xpToNextLevel;
-
-  // Facing direction for directional weapons
-  bool facingRight;
-
-  // Item effects (applied from items)
-  float damageReduction;    // 0.0 to 1.0 (e.g., 0.3 = 30% reduction)
-  float cooldownMultiplier; // 0.5 = 50% CDR
+    int level;
+    float currentXP;
+    float xpToNextLevel;
+    //pt directie pt arme
+    bool facingRight;
+    //de la iteme
+    float damageReduction; //=[0.0, 1.0] (0.3 = 30% dmgReduction)
+    float cooldownMultiplier; //0.5 = 50% CDR
 
 public:
-  Player(const CharacterData &data, ResourceManager &resources);
+    Player(const CharacterData &data, ResourceManager &resources);
 
-  ~Player();
+    ~Player();
+    //E doar move-only
+    Player(const Player &other) = delete;
+    Player &operator=(const Player &other) = delete;
 
-  Player(const Player &other);
+    Player(Player &&other) noexcept = default;
+    Player &operator=(Player &&other) noexcept = default;
 
-  Player &operator=(const Player &other);
+    // void handleInput();
+    void update(float dt, const sf::RenderWindow &window,
+                const std::vector<std::unique_ptr<Enemy> > &enemies,
+                std::vector<Projectile> &projectiles);
 
-  // void handleInput();
-  void update(float dt, const sf::RenderWindow &window,
-              const std::vector<std::unique_ptr<Enemy>> &enemies,
-              std::vector<Projectile> &projectiles);
+    void draw(sf::RenderWindow &window) const;
 
-  void draw(sf::RenderWindow &window) const;
+    void addWeapon(std::unique_ptr<Weapon> weapon);
+    void addItem(std::unique_ptr<Item> item);
 
-  // Weapon and item management
-  void addWeapon(const Weapon &weapon);
-  void addItem(Item *item);
-  const std::vector<Weapon *> &getWeapons() const { return weapons; }
-  const std::vector<Item *> &getItems() const { return items; }
+    const std::vector<std::unique_ptr<Weapon> > &getWeapons() const;
+    const std::vector<std::unique_ptr<Item> > &getItems() const;
 
-  // Leveling
-  void addXP(float amount);
-  bool shouldLevelUp() const { return currentXP >= xpToNextLevel; }
-  void levelUp();
-  int getLevel() const { return level; }
-  float getCurrentXP() const { return currentXP; }
-  float getXPToNextLevel() const { return xpToNextLevel; }
+    void addXP(float amount);
+    bool shouldLevelUp() const;
+    void levelUp();
+    int getLevel() const;
+    float getCurrentXP() const;
+    float getXPToNextLevel() const;
 
-  // Health
-  void heal(float amount);
-  void takeDamage(float amount);
-  bool isDead() const { return currentHealth <= 0; }
-  float getMaxHealth() const { return maxHealth; }
-  void increaseMaxHealth(float amount) {
-    maxHealth += amount;
-    currentHealth += amount;
-  }
-  void setHealthRegen(float regen) { healthRegen = regen; }
-  float getHealthRegen() const { return healthRegen; }
+    void heal(float amount);
+    void takeDamage(float amount);
+    bool isDead() const;
+    float getMaxHealth() const;
+    void increaseMaxHealth(float amount);
+    void setHealthRegen(float regen);
+    float getHealthRegen() const;
 
-  // Item effects
-  void setDamageReduction(float reduction) { damageReduction = reduction; }
-  void setCooldownMultiplier(float mult) { cooldownMultiplier = mult; }
-  float getDamageReduction() const { return damageReduction; }
-  float getCooldownMultiplier() const { return cooldownMultiplier; }
+    void setDamageReduction(float reduction);
+    void setCooldownMultiplier(float mult);
+    float getDamageReduction() const;
+    float getCooldownMultiplier() const;
+    void increaseSpeed(float multiplier);
+    float getSpeed() const;
 
-  // Movement
-  void increaseSpeed(float multiplier) { speed = baseSpeed * multiplier; }
-  float getSpeed() const { return speed; }
+    sf::Vector2f getPos() const;
+    sf::FloatRect getBounds() const;
+    bool isFacingRight() const;
 
-  // Position and collision
-  sf::Vector2f getPos() const;
-  sf::FloatRect getBounds() const { return sprite.getGlobalBounds(); }
+    friend std::ostream &operator<<(std::ostream &os, const Player &obj);
 
-  // Direction
-  bool isFacingRight() const { return facingRight; }
+    float getHealthPoints() const;
 
-  friend std::ostream &operator<<(std::ostream &os, const Player &obj) {
-    return os << "speed: " << obj.speed << " maxHealth: " << obj.maxHealth
-              << " currentHealth: " << obj.currentHealth
-              << " level: " << obj.level;
-  }
-
-  float getHealthPoints() const { return currentHealth / maxHealth; }
+private:
+    virtual void print(std::ostream &os) const {
+        os << "[Player] " << sprite.getTexture().getSize().x << "x"
+                << sprite.getTexture().getSize().y << " Level: " << level
+                << " HP: " << currentHealth << "/" << maxHealth << " XP: " << currentXP
+                << "/" << xpToNextLevel << " Weapons: " << weapons.size()
+                << " Items: " << items.size();
+    }
 };
 
 #endif // OOP_PLAYER_H

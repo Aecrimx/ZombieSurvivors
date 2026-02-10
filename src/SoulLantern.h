@@ -61,10 +61,10 @@ public:
         }
     }
 
-    friend std::ostream &operator<<(std::ostream &os, const SoulLantern &obj) {
+private:
+    void print(std::ostream &os) const override {
         os << "[SoulLantern]\n";
-        os << "Cooldown: " << obj.cooldown << '\n' << "Name: " << obj.name << '\n';
-        return os;
+        os << "Name: " << name << " Cooldown: " << cooldown;
     }
 };
 

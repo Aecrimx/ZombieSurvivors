@@ -24,9 +24,8 @@ public:
     virtual ~Animation();
     void addFrame(Frame&& frame);
     void update(double elapsed);
-    const double getLength() const {return totalLength;}
 
-
+    double getLength() const;
 };
 
 

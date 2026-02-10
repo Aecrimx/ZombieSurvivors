@@ -11,13 +11,11 @@ private:
 
 public:
     ExperienceStar(const sf::Texture &texture, sf::Vector2f spawnPos,
-                   float xp = 5.f)
-        : Pickup(texture, spawnPos, 150.f), xpValue(xp) {
-    }
+                   float xp = 5.f);
 
-    void onCollect(Player &player) override { player.addXP(xpValue); }
+    void onCollect(Player &player) override;
 
-    float getXPValue() const { return xpValue; }
+    float getXPValue() const;
 };
 
 #endif // OOP_EXPERIENCESTAR_H

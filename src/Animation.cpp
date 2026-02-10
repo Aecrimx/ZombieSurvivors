@@ -33,3 +33,5 @@ void Animation::update(double elapsed) {
 
     target.setTextureRect(frames.back().rect);
 }
+
+double Animation::getLength() const {return totalLength;}

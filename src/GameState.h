@@ -47,11 +47,10 @@ public:
 
     void Resize(int w, int h) override;
 
-    std::vector<Projectile> &getProjectiles() { return projectiles; }
+    std::vector<Projectile> &getProjectiles();
 
-    friend std::ostream &operator<<(std::ostream &os, const GameState & /*obj*/) {
-        return os << "[GameState]" << '\n';
-    }
+    friend std::ostream &operator<<(std::ostream &os, const GameState & /*obj*/);
+    //TODO adaugat informatii de printat pt gamestate
 };
 
 #endif // OOP_GAMESTATE_H

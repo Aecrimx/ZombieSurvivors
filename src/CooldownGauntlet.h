@@ -11,9 +11,17 @@ public:
 
     void applyEffect(Player &player) override {
         // Level 1: 16.67%, Level 2: 33.34%, Level 3: 50% cooldown reduction
-        //lvl1 : 16.67%, apoi 33.35% apoi 50%
-        float cdMultiplier = 1.0f - (level * 0.1667f);
+        // lvl1 : 16.67%, apoi 33.35% apoi 50%
+        float cdMultiplier = 1.0f - (static_cast<float>(level) * 0.1667f);
         player.setCooldownMultiplier(cdMultiplier);
+    }
+
+    Item *clone() const override { return new CooldownGauntlet(*this); }
+
+private:
+    void print(std::ostream &os) const override {
+        float cdr = level * 16.67f;
+        os << "[Cooldown Gauntlet] Level: " << level << " (CDR: " << cdr << "%)";
     }
 };
 

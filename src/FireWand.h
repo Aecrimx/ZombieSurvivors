@@ -8,46 +8,18 @@
 
 class FireWand : public Weapon {
 public:
-    explicit FireWand(ResourceManager &res) : Weapon("Fire Wand", 2.f, res) {
-    }
+    explicit FireWand(ResourceManager &res);
 
-    Weapon *clone() const override { return new FireWand(*this); }
+    Weapon *clone() const override;
 
     void update(float dt, sf::Vector2f playerPos,
                 const std::vector<std::unique_ptr<Enemy> > &enemies,
-                std::vector<Projectile> &projectiles) override {
-        if (timer > 0)
-            timer -= dt;
-        if (timer <= 0 && !enemies.empty()) {
-            const Enemy *nearest = nullptr;
-            float minDistSq = 999999999.f;
+                std::vector<Projectile> &projectiles) override;
 
-            for (const auto &enemy: enemies) {
-                sf::Vector2f diff = enemy->getPos() - playerPos;
-                float distSq = diff.x * diff.x + diff.y * diff.y;
-                if (distSq < minDistSq) {
-                    minDistSq = distSq;
-                    nearest = enemy.get();
-                }
-            }
-
-            if (nearest) {
-                sf::Vector2f dir = nearest->getPos() - playerPos;
-                float len = std::sqrt(dir.x * dir.x + dir.y * dir.y);
-                if (len > 0)
-                    dir /= len;
-
-                sf::Texture &tex = resources.getTexture("fireball");
-                projectiles.emplace_back(tex, playerPos, dir, 150.f, 10.f);
-                timer = cooldown;
-            }
-        }
-    }
-
-    friend std::ostream &operator<<(std::ostream &os, const FireWand &obj) {
+private:
+    void print(std::ostream &os) const override {
         os << "[FireWand]\n";
-        os << "Cooldown: " << obj.cooldown << '\n' << "Name: " << obj.name << '\n';
-        return os;
+        os << "Name: " << name << " Cooldown: " << cooldown << " Timer: " << timer;
     }
 };
 
