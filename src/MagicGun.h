@@ -10,7 +10,7 @@ private:
      * => incepe sa traga la 0 grade, apoi la 30, 60 etc...
      */
     int currentAngle;
-    const float angleIncrement = 30.f;
+    //const float angleIncrement = 30.f;
 
 public:
     explicit MagicGun(ResourceManager &res);

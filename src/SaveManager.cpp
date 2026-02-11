@@ -47,7 +47,7 @@ void SaveManager::loadSave() {
                     s.value("flying_skull_kills", data.flyingSkullKills);
             data.totalWins = s.value("total_wins", data.totalWins);
         }
-    } catch (const std::exception &e) {
+    } catch (const std::exception &/*e*/) {
         data = SaveData();
     }
 
