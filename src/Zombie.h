@@ -3,11 +3,10 @@
 
 #include "Enemy.h"
 #include <cmath>
-#include <ostream>
 
 class Zombie : public Enemy {
 public:
-    Zombie(sf::Texture &texture, sf::Vector2f startPos);
+    Zombie(const sf::Texture &texture, sf::Vector2f startPos);
 
     Zombie(const Zombie &other);
     Zombie &operator=(const Zombie &other);

@@ -3,7 +3,6 @@
 
 #include "Pickup.h"
 #include "Player.h"
-#include <cmath>
 
 class ExperienceStar : public Pickup {
 private:
@@ -15,7 +14,7 @@ public:
 
     void onCollect(Player &player) override;
 
-    float getXPValue() const;
+    //float getXPValue() const;
 };
 
 #endif // OOP_EXPERIENCESTAR_H

@@ -2,7 +2,7 @@
 #include "ResourceLoadException.h"
 #include <iostream>
 
-HUD::HUD(ResourceManager &res, int width, int height) : resourceManager(res) {
+HUD::HUD(ResourceManager &res, const int width, const int height) : resourceManager(res) {
     uiView.setSize(
         sf::Vector2f(static_cast<float>(width), static_cast<float>(height)));
     uiView.setCenter(sf::Vector2f(static_cast<float>(width) / 2.f,
@@ -26,14 +26,14 @@ HUD::HUD(ResourceManager &res, int width, int height) : resourceManager(res) {
     levelText->setStyle(sf::Text::Bold);
     levelText->setPosition({static_cast<float>(width) / 2.f - 40.f, 35.f});
 
-    sf::Texture &slotTexture = res.getTexture("slot");
+    const sf::Texture &slotTexture = res.getTexture("slot");
 
     const float slotScale = 1.f / 3.f;
-    float startX = 20.f;
+    const float startX = 20.f;
     float startY = 50.f;
-    float space = 10.f;
-    sf::Vector2u texSize = slotTexture.getSize();
-    float slotWidth = static_cast<float>(texSize.x) * slotScale;
+    const float space = 10.f;
+    const sf::Vector2u texSize = slotTexture.getSize();
+    const float slotWidth = static_cast<float>(texSize.x) * slotScale;
 
     for (int i = 0; i < 3; i++) {
         sf::Sprite s{slotTexture};
@@ -70,7 +70,7 @@ HUD::HUD(ResourceManager &res, int width, int height) : resourceManager(res) {
     res.loadTexture("heart_crystal_icon", "assets/heart_crystal128x128.png");
 }
 
-void HUD::onResize(int width, int height) {
+void HUD::onResize(const int width, const int height) {
     uiView.setSize({static_cast<float>(width), static_cast<float>(height)});
     uiView.setCenter(
         {static_cast<float>(width) / 2.f, static_cast<float>(height) / 2.f});
@@ -96,14 +96,14 @@ void HUD::onResize(int width, int height) {
         levelText->setPosition({static_cast<float>(width) / 2.f - 40.f, 35.f});
 }
 
-void HUD::update(const Player &player, float gameTimer) {
-    float currentXP = player.getCurrentXP();
-    float maxXP = player.getXPToNextLevel();
-    float pct = maxXP > 0 ? (currentXP / maxXP) : 0.f;
+void HUD::update(const Player &player, const float gameTimer) {
+    const float currentXP = player.getCurrentXP();
+    const float maxXP = player.getXPToNextLevel();
+    const float pct = maxXP > 0 ? (currentXP / maxXP) : 0.f;
     xpBarFillRect.setSize({xpBarRect.getSize().x * pct, xpBarRect.getSize().y});
 
-    int minutes = static_cast<int>(gameTimer) / 60;
-    int seconds = static_cast<int>(gameTimer) % 60;
+    const int minutes = static_cast<int>(gameTimer) / 60;
+    const int seconds = static_cast<int>(gameTimer) % 60;
     std::ostringstream oss;
     oss << std::setfill('0') << std::setw(2) << minutes << ":"
             << std::setfill('0') << std::setw(2) << seconds;

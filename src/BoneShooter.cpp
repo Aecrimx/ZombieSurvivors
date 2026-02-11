@@ -6,7 +6,7 @@ BoneShooter::BoneShooter(ResourceManager &res)
 
 Weapon *BoneShooter::clone() const { return new BoneShooter(*this); }
 
-void BoneShooter::update(float dt, sf::Vector2f playerPos,
+void BoneShooter::update(const float dt, sf::Vector2f playerPos,
                          const std::vector<std::unique_ptr<Enemy> > &enemies,
                          std::vector<Projectile> &projectiles) {
     if (timer > 0)

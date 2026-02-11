@@ -15,7 +15,7 @@ private:
     ResourceManager &resources;
 
 public:
-    BigZombieBoss(sf::Texture &texture, sf::Vector2f startPos,
+    BigZombieBoss(const sf::Texture &texture, sf::Vector2f startPos,
                   std::vector<Projectile> &projs, ResourceManager &res,
                   int playerLevel = 0);
 

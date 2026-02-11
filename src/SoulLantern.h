@@ -2,8 +2,6 @@
 #define OOP_SOULLANTERN_H
 
 #include "Weapon.h"
-#include <cmath>
-#include <iostream>
 
 class SoulLantern : public Weapon {
 public:

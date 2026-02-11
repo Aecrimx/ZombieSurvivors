@@ -7,7 +7,7 @@
 
 class Bat : public Enemy {
 public:
-    Bat(sf::Texture &texture, sf::Vector2f startPos, int playerLevel = 0);
+    Bat(const sf::Texture &texture, sf::Vector2f startPos, int playerLevel = 0);
     Bat(const Bat &other);
     Bat &operator=(const Bat &other);
     Bat(Bat &&other) noexcept;

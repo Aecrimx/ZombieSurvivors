@@ -2,8 +2,6 @@
 #define OOP_BONESHOOTER_H
 
 #include "Weapon.h"
-#include <cmath>
-#include <iostream>
 
 class BoneShooter : public Weapon {
 public:

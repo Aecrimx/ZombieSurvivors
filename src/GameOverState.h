@@ -1,7 +1,6 @@
 #ifndef OOP_GAMEOVERSTATE_H
 #define OOP_GAMEOVERSTATE_H
 
-#include "SaveManager.h"
 #include "State.h"
 #include <SFML/Graphics.hpp>
 #include <memory>

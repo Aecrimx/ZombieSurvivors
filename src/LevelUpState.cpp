@@ -10,13 +10,12 @@
 #include "ResourceLoadException.h"
 #include "SoulLantern.h"
 #include <algorithm>
-#include <iostream>
 #include <random>
 
 LevelUpState::LevelUpState(Game &gameRef, Player *playerRef,
                            State *underlyingState)
-    : State(gameRef), hoveredIndex(-1), player(playerRef),
-      gameState(underlyingState) {
+    : State(gameRef), gameState(underlyingState), hoveredIndex(-1),
+      player(playerRef) {
     if (!font.openFromFile("fonts/game_over.ttf")) {
         throw ResourceLoadException("Failed to load font: fonts/game_over.ttf");
     }
@@ -199,7 +198,7 @@ void LevelUpState::generateOptions() {
     std::mt19937 gen(rd());
     std::shuffle(available.begin(), available.end(), gen);
 
-    int numOptions = std::min(3, (int) available.size());
+    const int numOptions = std::min(3, static_cast<int>(available.size()));
     for (int i = 0; i < numOptions; ++i) {
         UpgradeOption opt;
         opt.name = available[i].name;
@@ -222,9 +221,9 @@ void LevelUpState::generateOptions() {
     }
 }
 
-void LevelUpState::updateLayout(int windowWidth, int windowHeight) {
+void LevelUpState::updateLayout(const int windowWidth, int /*windowHeight*/) {
     if (titleText) {
-        sf::FloatRect titleBounds = titleText->getGlobalBounds();
+        const sf::FloatRect titleBounds = titleText->getGlobalBounds();
         titleText->setPosition({(windowWidth - titleBounds.size.x) / 2.f, 50.f});
     }
 
@@ -254,9 +253,9 @@ void LevelUpState::updateLayout(int windowWidth, int windowHeight) {
 void LevelUpState::handleInput() {
 }
 
-void LevelUpState::update(float dt) {
-    sf::Vector2i mousePos = sf::Mouse::getPosition(game.getWindow());
-    sf::Vector2f mousePosF(static_cast<float>(mousePos.x),
+void LevelUpState::update(float /*dt*/) {
+    const sf::Vector2i mousePos = sf::Mouse::getPosition(game.getWindow());
+    const sf::Vector2f mousePosF(static_cast<float>(mousePos.x),
                            static_cast<float>(mousePos.y));
 
     hoveredIndex = -1;
@@ -302,4 +301,4 @@ void LevelUpState::draw() {
     }
 }
 
-void LevelUpState::Resize(int w, int h) { updateLayout(w, h); }
+void LevelUpState::Resize(const int w, const int h) { updateLayout(w, h); }

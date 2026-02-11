@@ -6,7 +6,6 @@
 #include "ResourceManager.h"
 #include <SFML/Graphics.hpp>
 #include <memory>
-#include <ostream>
 #include <vector>
 
 class Weapon {

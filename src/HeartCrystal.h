@@ -11,8 +11,8 @@ public:
 
     void applyEffect(Player &player) override {
         // La fiecare lvl up +10max hp si +0.5HP/sec regenerare
-        float maxHPIncrease = level * 10.f;
-        float regenIncrease = level * 0.5f;
+        const float maxHPIncrease = level * 10.f;
+        const float regenIncrease = level * 0.5f;
 
         player.increaseMaxHealth(maxHPIncrease);
         player.setHealthRegen(regenIncrease);

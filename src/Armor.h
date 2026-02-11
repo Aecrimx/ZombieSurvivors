@@ -11,7 +11,7 @@ public:
 
     void applyEffect(Player &player) override {
         // 10% damage reduction pt fiecare level up
-        float reduction = static_cast<float>(level) * 0.1f;
+        const float reduction = static_cast<float>(level) * 0.1f;
         player.setDamageReduction(reduction);
     }
 

@@ -2,9 +2,7 @@
 #define OOP_RESOURCEMANAGER_H
 
 #include <SFML/Graphics.hpp>
-#include <iostream>
 #include <map>
-#include <stdexcept>
 #include <string>
 
 class ResourceManager {

@@ -2,8 +2,6 @@
 #define OOP_FIREWAND_H
 
 #include "Weapon.h"
-#include <cmath>
-#include <iostream>
 #include <ostream>
 
 class FireWand : public Weapon {

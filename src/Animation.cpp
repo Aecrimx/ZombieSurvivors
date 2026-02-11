@@ -12,7 +12,7 @@ void Animation::addFrame(Frame &&frame) {
     frames.push_back(std::move(frame));
 }
 
-void Animation::update(double elapsed) {
+void Animation::update(const double elapsed) {
     if (frames.empty())
         return;
 

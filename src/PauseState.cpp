@@ -55,7 +55,7 @@ void PauseState::updateLayout(int windowWidth, int windowHeight) {
 void PauseState::handleInput() {
 }
 
-void PauseState::update(float dt) {
+void PauseState::update(float /*dt*/) {
     sf::Vector2i mousePos = sf::Mouse::getPosition(game.getWindow());
     sf::Vector2f mousePosF(static_cast<float>(mousePos.x),
                            static_cast<float>(mousePos.y));

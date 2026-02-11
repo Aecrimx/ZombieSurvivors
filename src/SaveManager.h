@@ -3,7 +3,6 @@
 
 #include "SaveData.h"
 #include <fstream>
-#include <sstream>
 #include <string>
 /*
  * pt tema 3 singleton

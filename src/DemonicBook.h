@@ -2,10 +2,7 @@
 #define OOP_DEMONICBOOK_H
 
 #include "Weapon.h"
-#include <algorithm>
-#include <cmath>
-#include <iostream>
-#include <ostream>
+
 
 class DemonicBook : public Weapon {
 private:

@@ -4,7 +4,7 @@
 
 #include "Zombie.h"
 
-Zombie::Zombie(sf::Texture &texture, sf::Vector2f startPos)
+Zombie::Zombie(const sf::Texture &texture, sf::Vector2f startPos)
     : Enemy(texture, 20.f, 10.f, 125.f) {
   sprite.setOrigin({texture.getSize().x / 2.f, texture.getSize().y / 2.f});
   sprite.setPosition(startPos);

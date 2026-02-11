@@ -1,7 +1,7 @@
 #include "ExperienceStar.h"
 
 ExperienceStar::ExperienceStar(const sf::Texture &texture,
-                               sf::Vector2f spawnPos, float xp)
+                               const sf::Vector2f spawnPos, const float xp)
     : Pickup(texture, spawnPos, 150.f), xpValue(xp) {
 }
 

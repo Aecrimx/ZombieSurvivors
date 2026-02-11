@@ -2,10 +2,9 @@
 #include "Game.h"
 #include "MenuState.h"
 #include "ResourceLoadException.h"
-#include <iostream>
 
-GameOverState::GameOverState(Game &gameRef, int score,
-                             const std::string &charName, bool isVictory,
+GameOverState::GameOverState(Game &gameRef, const int score,
+                             const std::string &charName, const bool isVictory,
                              State *underlyingState)
     : State(gameRef), retryHovered(false), menuHovered(false),
       victory(isVictory), finalScore(score), characterName(charName),
@@ -15,7 +14,7 @@ GameOverState::GameOverState(Game &gameRef, int score,
     }
 
     std::string titleStr = victory ? "YOU WON" : "GAME OVER";
-    sf::Color titleColor = victory ? sf::Color::Yellow : sf::Color::Red;
+    const sf::Color titleColor = victory ? sf::Color::Yellow : sf::Color::Red;
 
     titleText = std::make_unique<sf::Text>(font, titleStr, 70);
     titleText->setFillColor(titleColor);
@@ -48,39 +47,39 @@ GameOverState::GameOverState(Game &gameRef, int score,
     menuText = std::make_unique<sf::Text>(font, "Main Menu", 40);
     menuText->setFillColor(sf::Color::White);
 
-    sf::Vector2f size = game.getWindowSize();
+    const sf::Vector2f size = game.getWindowSize();
     updateLayout(size.x, size.y);
 }
 
-void GameOverState::updateLayout(int windowWidth, int windowHeight) {
+void GameOverState::updateLayout(const int windowWidth, const int windowHeight) {
     float startY = windowHeight / 5.f;
 
     if (titleText) {
-        sf::FloatRect titleBounds = titleText->getGlobalBounds();
+        const sf::FloatRect titleBounds = titleText->getGlobalBounds();
         titleText->setPosition({(windowWidth - titleBounds.size.x) / 2.f, startY});
     }
 
     if (scoreText) {
-        sf::FloatRect scoreBounds = scoreText->getGlobalBounds();
+        const sf::FloatRect scoreBounds = scoreText->getGlobalBounds();
         scoreText->setPosition(
             {(windowWidth - scoreBounds.size.x) / 2.f, startY + 100.f});
     }
 
     if (highScoreText) {
-        sf::FloatRect hsBounds = highScoreText->getGlobalBounds();
+        const sf::FloatRect hsBounds = highScoreText->getGlobalBounds();
         highScoreText->setPosition(
             {(windowWidth - hsBounds.size.x) / 2.f, startY + 160.f});
     }
 
     if (retryText) {
-        sf::FloatRect retryB = retryText->getGlobalBounds();
+        const sf::FloatRect retryB = retryText->getGlobalBounds();
         retryText->setPosition(
             {(windowWidth - retryB.size.x) / 2.f, startY + 250.f});
         retryBounds = retryText->getGlobalBounds();
     }
 
     if (menuText) {
-        sf::FloatRect menuB = menuText->getGlobalBounds();
+        const sf::FloatRect menuB = menuText->getGlobalBounds();
         menuText->setPosition({(windowWidth - menuB.size.x) / 2.f, startY + 320.f});
         menuBounds = menuText->getGlobalBounds();
     }
@@ -89,9 +88,9 @@ void GameOverState::updateLayout(int windowWidth, int windowHeight) {
 void GameOverState::handleInput() {
 }
 
-void GameOverState::update(float dt) {
-    sf::Vector2i mousePos = sf::Mouse::getPosition(game.getWindow());
-    sf::Vector2f mousePosF(static_cast<float>(mousePos.x),
+void GameOverState::update(float /*dt*/) {
+    const sf::Vector2i mousePos = sf::Mouse::getPosition(game.getWindow());
+    const sf::Vector2f mousePosF(static_cast<float>(mousePos.x),
                            static_cast<float>(mousePos.y));
 
     // pt mouse hovering
@@ -105,7 +104,7 @@ void GameOverState::update(float dt) {
         menuText->setFillColor(menuHovered ? sf::Color::Yellow : sf::Color::White);
     }
 
-    bool mouseCurrentlyPressed =
+    const bool mouseCurrentlyPressed =
             sf::Mouse::isButtonPressed(sf::Mouse::Button::Left);
 
     if (mouseWasPressed && !mouseCurrentlyPressed) {
@@ -146,4 +145,4 @@ void GameOverState::draw() {
         game.getWindow().draw(*menuText);
 }
 
-void GameOverState::Resize(int w, int h) { updateLayout(w, h); }
+void GameOverState::Resize(const int w, const int h) { updateLayout(w, h); }

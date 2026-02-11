@@ -1,6 +1,6 @@
 #include "Bat.h"
 
-Bat::Bat(sf::Texture &texture, sf::Vector2f startPos, int playerLevel)
+Bat::Bat(const sf::Texture &texture, const sf::Vector2f startPos, const int playerLevel)
     : Enemy(texture, 10.f + (5.f * static_cast<float>(playerLevel)), 5.f,
             135.f) {
     sprite.setOrigin({texture.getSize().x / 2.f, texture.getSize().y / 2.f});
@@ -29,7 +29,7 @@ void swap(Bat &first, Bat &second) noexcept {
 
 Enemy *Bat::clone() const { return new Bat(*this); }
 
-void Bat::update(float dt, sf::Vector2f playerPos) {
+void Bat::update(const float dt, const sf::Vector2f playerPos) {
     sf::Vector2f dir = playerPos - sprite.getPosition();
     float length = std::sqrt(dir.x * dir.x + dir.y * dir.y);
 

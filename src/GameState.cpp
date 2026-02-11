@@ -92,8 +92,8 @@ GameState::GameState(Game &gameRef, const CharacterData &charData)
     view.setSize({game.getWindowSize().x, game.getWindowSize().y});
     view.setCenter(player->getPos());
 
-    sf::Vector2f winSize = game.getWindowSize();
-    GameState::Resize((int) winSize.x, (int) winSize.y);
+    const sf::Vector2f winSize = game.getWindowSize();
+    GameState::Resize(static_cast<int>(winSize.x), static_cast<int>(winSize.y));
 
     sf::Vector2u size = game.getWindow().getSize();
     hud = std::make_unique<HUD>(res, size.x, size.y);
@@ -101,7 +101,7 @@ GameState::GameState(Game &gameRef, const CharacterData &charData)
     GameState::Resize(static_cast<int>(size.x), static_cast<int>(size.y));
 }
 
-void GameState::Resize(int w, int h) {
+void GameState::Resize(const int w, const int h) {
     view = game.LetterboxView(view, w, h);
     if (hud) {
         const sf::FloatRect vp = view.getViewport();
@@ -120,14 +120,14 @@ std::ostream &operator<<(std::ostream &os, const GameState &) {
 }
 
 void GameState::handleInput() {
-    bool escCurrentlyPressed =
+    const bool escCurrentlyPressed =
             sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Escape);
     if (escCurrentlyPressed && !escWasPressed) {
         game.pushState(std::make_unique<PauseState>(game, this));
     }
 }
 
-void GameState::update(float dt) {
+void GameState::update(const float dt) {
     if (!player) {
         return;
     }
@@ -151,8 +151,8 @@ void GameState::update(float dt) {
     if (!bossSpawned && gameTimer >= 900.f) {
         // 900s = 15 min
         bossSpawned = true;
-        float angle = (rand() % 360) * 3.14f / 180.f;
-        float dist = 500.f;
+        const float angle = (rand() % 360) * 3.14f / 180.f;
+        const float dist = 500.f;
         sf::Vector2f spawnPos =
                 player->getPos() +
                 sf::Vector2f(std::cos(angle) * dist, std::sin(angle) * dist);
@@ -167,8 +167,8 @@ void GameState::update(float dt) {
 
     if (spawnTimer > spawnInterval) {
         spawnTimer = 0;
-        float angle = (rand() % 360) * 3.14f / 180.f;
-        float dist = 400.f;
+        const float angle = (rand() % 360) * 3.14f / 180.f;
+        const float dist = 400.f;
         sf::Vector2f spawnPos =
                 player->getPos() +
                 sf::Vector2f(std::cos(angle) * dist, std::sin(angle) * dist);
@@ -219,18 +219,18 @@ void GameState::update(float dt) {
     player->update(dt, game.getWindow(), enemies, projectiles);
     view.setCenter(player->getPos());
 
-    for (auto &enemy: enemies) {
+    for (const auto &enemy: enemies) {
         enemy->update(dt, player->getPos());
     }
 
-    for (auto &pickup: pickups) {
+    for (const auto &pickup: pickups) {
         pickup->update(dt, player->getPos());
     }
 
-    sf::FloatRect playerBounds = player->getBounds();
+    const sf::FloatRect playerBounds = player->getBounds();
     for (auto it = pickups.begin(); it != pickups.end();) {
-        sf::FloatRect pb = (*it)->getBounds();
-        bool collides =
+        const sf::FloatRect pb = (*it)->getBounds();
+        const bool collides =
         (playerBounds.position.x < pb.position.x + pb.size.x &&
          playerBounds.position.x + playerBounds.size.x > pb.position.x &&
          playerBounds.position.y < pb.position.y + pb.size.y &&
@@ -249,8 +249,8 @@ void GameState::update(float dt) {
 
     for (const auto &enemy: enemies) {
         if (contactDamageCooldown <= 0.f) {
-            sf::FloatRect enemyBounds = enemy->getBounds();
-            bool collides = (playerBounds.position.x <
+            const sf::FloatRect enemyBounds = enemy->getBounds();
+            const bool collides = (playerBounds.position.x <
                              enemyBounds.position.x + enemyBounds.size.x &&
                              playerBounds.position.x + playerBounds.size.x >
                              enemyBounds.position.x &&
@@ -274,7 +274,7 @@ void GameState::update(float dt) {
 
         if (it->isHostile() && player) {
             const sf::FloatRect pb = player->getBounds();
-            bool overlapP = (a.position.x < pb.position.x + pb.size.x &&
+            const bool overlapP = (a.position.x < pb.position.x + pb.size.x &&
                              a.position.x + a.size.x > pb.position.x &&
                              a.position.y < pb.position.y + pb.size.y &&
                              a.position.y + a.size.y > pb.position.y);
@@ -285,9 +285,9 @@ void GameState::update(float dt) {
         }
 
         if (!hit && !it->isHostile()) {
-            for (auto &enemy: enemies) {
+            for (const auto &enemy: enemies) {
                 const sf::FloatRect b = enemy->getBounds();
-                bool overlap = (a.position.x < b.position.x + b.size.x &&
+                const bool overlap = (a.position.x < b.position.x + b.size.x &&
                                 a.position.x + a.size.x > b.position.x &&
                                 a.position.y < b.position.y + b.size.y &&
                                 a.position.y + a.size.y > b.position.y);
@@ -323,8 +323,7 @@ void GameState::update(float dt) {
                 return;
             }
 
-            int dropChance = rand() % 100;
-            if (dropChance < 90) {
+            if (const int dropChance = rand() % 100; dropChance < 90) {
                 pickups.push_back(std::make_unique<ExperienceStar>(
                     game.getResourceManager().getTexture("experience"), deathPos));
             } else {

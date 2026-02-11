@@ -8,7 +8,7 @@ SoulLantern::SoulLantern(ResourceManager &res)
 Weapon *SoulLantern::clone() const { return new SoulLantern(*this); }
 
 void SoulLantern::update(float dt, sf::Vector2f playerPos,
-                         const std::vector<std::unique_ptr<Enemy> > &enemies,
+                         const std::vector<std::unique_ptr<Enemy> > &/*enemies*/,
                          std::vector<Projectile> &projectiles) {
     if (timer > 0)
         timer -= dt;

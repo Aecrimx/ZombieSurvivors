@@ -1,6 +1,6 @@
 #include "Item.h"
 
-Item::Item(const std::string &itemName, int itemLevel)
+Item::Item(const std::string &itemName, const int itemLevel)
     : name(itemName), level(itemLevel) {
 }
 

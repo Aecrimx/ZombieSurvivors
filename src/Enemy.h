@@ -10,7 +10,7 @@ protected:
     float health, damage, speed;
 
 public:
-    Enemy(const sf::Texture &texture, float hp, float dmg, float speed)
+    Enemy(const sf::Texture &texture, const float hp, const float dmg, const float speed)
         : sprite(texture), health(hp), damage(dmg), speed(speed) {
     }
     Enemy(const Enemy &other)

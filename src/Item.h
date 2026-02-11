@@ -26,16 +26,16 @@ public:
 
     void levelUp();
 
-    bool canLevelUp() const;
+    [[nodiscard]] bool canLevelUp() const;
 
     int getLevel() const;
 
     const std::string& getName() const;
 
     // ui stuff
-    const sf::Sprite *getIcon() const;
+    //const sf::Sprite *getIcon() const;
 
-    void setIcon(const sf::Texture &texture);
+    //void setIcon(const sf::Texture &texture);
 
     virtual Item *clone() const = 0;
 

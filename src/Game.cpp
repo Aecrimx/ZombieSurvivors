@@ -2,9 +2,9 @@
 #include "State.h"
 #include <iostream>
 
-sf::View Game::LetterboxView(sf::View view, int winWidth, int winHeight) {
-    float windowRatio = winWidth / static_cast<float>(winHeight);
-    float viewRatio = view.getSize().x / (float) view.getSize().y;
+sf::View Game::LetterboxView(sf::View view, const int winWidth, const int winHeight) {
+    const float windowRatio = winWidth / static_cast<float>(winHeight);
+    const float viewRatio = view.getSize().x / (float) view.getSize().y;
     float sizeX = 1.f, sizeY = 1.f, posX = 0.f, posY = 0.f;
 
     if (windowRatio < viewRatio) {
@@ -26,7 +26,7 @@ sf::Vector2f Game::getWindowSize() const {
 }
 
 Game::Game(const int width, const int height, const std::string &title)
-    : title(title), width((unsigned int) width), height((unsigned int) height),
+    : title(title), width(static_cast<unsigned int>(width)), height(static_cast<unsigned int>(height)),
       fullscreen_toggle(0) {
     window.create(sf::VideoMode({
                       static_cast<unsigned int>(width),
@@ -51,7 +51,7 @@ void Game::run() {
     sf::Clock clock;
 
     while (window.isOpen()) {
-        float dt = clock.restart().asSeconds();
+        const float dt = clock.restart().asSeconds();
 
         if (states.empty()) {
             window.close();
@@ -80,11 +80,11 @@ void Game::run() {
                     } else {
                         fullscreen_toggle = 0;
                         window.create(
-                            sf::VideoMode({(unsigned int) width, (unsigned int) height}),
+                            sf::VideoMode({static_cast<unsigned int>(width), static_cast<unsigned int>(height)}),
                             title, sf::Style::Default);
                         window.setVerticalSyncEnabled(true);
                     }
-                    auto newSize = window.getSize();
+                    const auto newSize = window.getSize();
                     width = static_cast<int>(newSize.x);
                     height = static_cast<int>(newSize.y);
 

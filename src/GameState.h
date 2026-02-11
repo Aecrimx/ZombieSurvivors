@@ -47,7 +47,7 @@ public:
 
     void Resize(int w, int h) override;
 
-    std::vector<Projectile> &getProjectiles();
+    //std::vector<Projectile> &getProjectiles();
 
     friend std::ostream &operator<<(std::ostream &os, const GameState & /*obj*/);
 

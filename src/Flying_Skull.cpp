@@ -4,7 +4,7 @@
 
 #include "Flying_Skull.h"
 
-Flying_Skull::Flying_Skull(sf::Texture &texture, sf::Vector2f startPos,
+Flying_Skull::Flying_Skull(const sf::Texture &texture, const sf::Vector2f startPos,
                            std::vector<Projectile> &projs, ResourceManager &res)
     : RangedEnemy(texture, 25.f, 10.f, 60.f, projs, res), fireTimer(0.f),
       anim(sprite) {
@@ -25,10 +25,10 @@ Flying_Skull::Flying_Skull(sf::Texture &texture, sf::Vector2f startPos,
 
 Enemy *Flying_Skull::clone() const { return new Flying_Skull(*this); }
 
-void Flying_Skull::update(float dt, sf::Vector2f playerPos) {
+void Flying_Skull::update(const float dt, const sf::Vector2f playerPos) {
     anim.update(dt);
-    sf::Vector2f dir = playerPos - sprite.getPosition();
-    float length = std::sqrt(dir.x * dir.x + dir.y * dir.y);
+    const sf::Vector2f dir = playerPos - sprite.getPosition();
+    const float length = std::sqrt(dir.x * dir.x + dir.y * dir.y);
 
     if (length > 300.f) {
         sf::Vector2f ndir = dir / length;

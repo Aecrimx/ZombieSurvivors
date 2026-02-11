@@ -18,7 +18,7 @@ class Flying_Skull : public RangedEnemy {
     Animation anim;
 
 public:
-    Flying_Skull(sf::Texture &texture, sf::Vector2f startPos,
+    Flying_Skull(const sf::Texture &texture, sf::Vector2f startPos,
                  std::vector<Projectile> &projs, ResourceManager &res);
 
     Enemy *clone() const override;

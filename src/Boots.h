@@ -11,7 +11,7 @@ public:
 
     void applyEffect(Player &player) override {
         // la fiecare level 10% speed increase
-        float speedMultiplier = 1.0f + (level * 0.1f);
+        const float speedMultiplier = 1.0f + (level * 0.1f);
         player.increaseSpeed(speedMultiplier);
     }
 

@@ -25,7 +25,7 @@ public:
     void addFrame(Frame&& frame);
     void update(double elapsed);
 
-    double getLength() const;
+    //double getLength() const;
 };
 
 

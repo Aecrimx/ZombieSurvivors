@@ -2,8 +2,6 @@
 #define OOP_MAGICGUN_H
 
 #include "Weapon.h"
-#include <cmath>
-#include <iostream>
 
 class MagicGun : public Weapon {
 private:

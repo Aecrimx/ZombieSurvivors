@@ -3,7 +3,6 @@
 #include "Game.h"
 #include "GameState.h"
 #include "ResourceLoadException.h"
-#include <iostream>
 
 MenuState::MenuState(Game &gameRef)
     : State(gameRef), hoveredIndex(-1), selectedIndex(-1) {

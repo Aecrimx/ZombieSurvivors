@@ -13,6 +13,8 @@ class Projectile {
     bool hostile;
 
 public:
+    virtual ~Projectile() = default;
+
     Projectile(const sf::Texture &texture, sf::Vector2f pos, sf::Vector2f dir,
                float speed, float dmg, bool isHostile = false);
 

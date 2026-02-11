@@ -47,7 +47,7 @@ public:
 
     ResourceManager &getResourceManager();
 
-    sf::View LetterboxView(sf::View view, int winWidth, int winHeight);
+    static sf::View LetterboxView(sf::View view, int winWidth, int winHeight);
 
     sf::Vector2f getWindowSize() const;
 

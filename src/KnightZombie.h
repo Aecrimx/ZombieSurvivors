@@ -7,7 +7,7 @@
 
 class KnightZombie : public Enemy {
 public:
-    KnightZombie(sf::Texture &texture, sf::Vector2f startPos,
+    KnightZombie(const sf::Texture &texture, sf::Vector2f startPos,
                  int playerLevel = 0);
 
     Enemy *clone() const override;

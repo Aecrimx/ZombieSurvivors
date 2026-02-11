@@ -1,12 +1,12 @@
 #include "HealthPickup.h"
 
-HealthPickup::HealthPickup(const sf::Texture &texture, sf::Vector2f spawnPos,
-                           float heal)
+HealthPickup::HealthPickup(const sf::Texture &texture, const sf::Vector2f spawnPos,
+                           const float heal)
     : Pickup(texture, spawnPos, 150.f), healAmount(heal) {
 }
 
 void HealthPickup::onCollect(Player &player) {
-    float maxHealth = player.getMaxHealth();
+    const float maxHealth = player.getMaxHealth();
     player.heal(maxHealth * healAmount);
 }
 
