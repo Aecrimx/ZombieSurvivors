@@ -16,6 +16,7 @@
 #include "Flying_Skull.h"
 
 GameState::GameState(Game &ref) : State(ref) {
+    // this is kinda deprecated code
     ResourceManager &res = game.getResourceManager();
 
     res.loadTexture("fire_wand", "assets/fire_wand.png");
@@ -75,6 +76,8 @@ GameState::GameState(Game &gameRef, const CharacterData &charData)
     res.loadTexture("dumbbell", "assets/dumbbell.png");
     res.loadTexture("bone", "assets/bone128x128.png");
     res.loadTexture("background", "assets/grass.png");
+    res.loadTexture("soul_Scream", "assets/soul_Scream32x64.png");
+
     res.getTexture("background").setRepeated(true);
 
     res.loadTexture("experience", "assets/experience_star128x128.png");

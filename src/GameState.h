@@ -50,7 +50,7 @@ public:
     std::vector<Projectile> &getProjectiles();
 
     friend std::ostream &operator<<(std::ostream &os, const GameState & /*obj*/);
-    //TODO adaugat informatii de printat pt gamestate
+
 };
 
 #endif // OOP_GAMESTATE_H

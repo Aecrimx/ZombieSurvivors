@@ -25,8 +25,7 @@ private:
         int highScore{0};
 
         std::unique_ptr<sf::Sprite> sprite;
-        std::unique_ptr<Animation>
-        animation;
+        std::unique_ptr<Animation> animation;
         sf::RectangleShape cardBg;
         std::unique_ptr<sf::Text> nameText;
         std::unique_ptr<sf::Text> statsText;

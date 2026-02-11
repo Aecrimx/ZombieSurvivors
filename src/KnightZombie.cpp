@@ -2,7 +2,7 @@
 
 KnightZombie::KnightZombie(sf::Texture &texture, sf::Vector2f startPos,
                            int playerLevel)
-    : Enemy(texture, 50.f + (5.f * playerLevel), 25.f, 80.f) {
+    : Enemy(texture, 35.f + (5.f * playerLevel), 25.f, 80.f) {
     sprite.setOrigin({texture.getSize().x / 2.f, texture.getSize().y / 2.f});
     sprite.setPosition(startPos);
     sprite.setScale({0.25f, 0.25f});

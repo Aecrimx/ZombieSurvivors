@@ -1,7 +1,7 @@
 #include "MagicGun.h"
 
 MagicGun::MagicGun(ResourceManager &res)
-    : Weapon("Magic Gun", 1.5f, res), currentAngle(0) {
+    : Weapon("Magic Gun", 2.5f, res), currentAngle(0) {
 }
 
 Weapon *MagicGun::clone() const { return new MagicGun(*this); }

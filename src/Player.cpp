@@ -26,7 +26,7 @@ Player::Player(const CharacterData &data, ResourceManager &resources)
         }
         sprite.setOrigin({frameW / 2.f, frameH / 2.f});
         sprite.setTextureRect(sf::IntRect({0, 0}, {frameW, frameH}));
-        sprite.setScale({0.7f, 0.7f}); // Match enemy flying skull scale
+        sprite.setScale({0.7f, 0.7f});
     } else {
         sf::Vector2u size = resources.getTexture(data.texture_name).getSize();
         sprite.setOrigin({size.x / 2.f, size.y / 2.f});
