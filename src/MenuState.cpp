@@ -2,12 +2,13 @@
 #include "Animation.h"
 #include "Game.h"
 #include "GameState.h"
+ #include "ResourceLoadException.h"
 #include <iostream>
 
 MenuState::MenuState(Game &gameRef)
     : State(gameRef), hoveredIndex(-1), selectedIndex(-1) {
     if (!font.openFromFile("fonts/game_over.ttf")) {
-        std::cerr << "Failed to load font!" << std::endl;
+        throw ResourceLoadException("Failed to load font: fonts/game_over.ttf");
     }
 
     //bakcground image
@@ -65,7 +66,7 @@ void MenuState::setupCharacters() {
     skull.name = "Flying Skull ( Rattling... )";
     skull.textureName = "spinning_skull";
     skull.data = CharacterData("Flying Skull", "spinning_skull", 110.f, 100.f,
-                               "Skull Shooter", "skull");
+                               "Bone Shooter", "bone");
     skull.unlocked = saveManager.isCharacterUnlocked("flying_skull");
     skull.highScore = saveManager.getHighScore("flying_skull");
     skull.sprite = std::make_unique<sf::Sprite>(res.getTexture("spinning_skull"));
@@ -83,7 +84,7 @@ void MenuState::setupCharacters() {
     skull.sprite->setOrigin({frameW / 2.f, frameH / 2.f});
     skull.sprite->setTextureRect(sf::IntRect({0, 0}, {frameW, frameH}));
 
-    // setup character cards
+    //setup character cards
     for (auto *card: {&wizard, &demon, &skull}) {
         card->nameText = std::make_unique<sf::Text>(font, card->name, 48);
         card->nameText->setFillColor(sf::Color::White);

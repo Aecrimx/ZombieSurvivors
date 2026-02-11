@@ -72,6 +72,8 @@ GameState::GameState(Game &gameRef, const CharacterData &charData)
     res.loadTexture("demonic_book", "assets/demonic_book32x32.png");
     res.loadTexture("laser_projectile", "assets/laser_projectile512x16.png");
     res.loadTexture("skull", "assets/skull_projectile.png");
+    res.loadTexture("dumbbell", "assets/dumbbell.png");
+    res.loadTexture("bone", "assets/bone128x128.png");
     res.loadTexture("background", "assets/grass.png");
     res.getTexture("background").setRepeated(true);
 
@@ -108,9 +110,9 @@ void GameState::Resize(int w, int h) {
     }
 }
 
-std::vector<Projectile> & GameState::getProjectiles() { return projectiles; }
+std::vector<Projectile> &GameState::getProjectiles() { return projectiles; }
 
-std::ostream & operator<<(std::ostream &os, const GameState &) {
+std::ostream &operator<<(std::ostream &os, const GameState &) {
     return os << "[GameState]" << '\n';
 }
 
@@ -138,7 +140,8 @@ void GameState::update(float dt) {
     if (player->isDead()) {
         int score = player->getLevel() * 100;
         game.scheduleReplace(std::make_unique<GameOverState>(
-            game, score, characterName, false, nullptr)); // inainte nu pasam nullptr which fucked everything up
+            game, score, characterName, false,
+            nullptr)); // inainte nu pasam nullptr which fucked everything up
         return;
     }
 

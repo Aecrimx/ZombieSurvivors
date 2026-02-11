@@ -1,7 +1,7 @@
 #include "BoneShooter.h"
 
 BoneShooter::BoneShooter(ResourceManager &res)
-    : Weapon("Bone Shooter", 2.5f, res) {
+    : Weapon("Bone Shooter", 2.0f, res, 35.f) {
 }
 
 Weapon *BoneShooter::clone() const { return new BoneShooter(*this); }
@@ -32,7 +32,7 @@ void BoneShooter::update(float dt, sf::Vector2f playerPos,
                 dir /= len;
 
             sf::Texture &tex = resources.getTexture("skull");
-            projectiles.emplace_back(tex, playerPos, dir, 250.f, 15.f, false);
+            projectiles.emplace_back(tex, playerPos, dir, 250.f, damage, false);
 
             timer = cooldown;
         }

@@ -7,6 +7,7 @@
 #include "Game.h"
 #include "HeartCrystal.h"
 #include "MagicGun.h"
+#include "ResourceLoadException.h"
 #include "SoulLantern.h"
 #include <algorithm>
 #include <iostream>
@@ -17,7 +18,7 @@ LevelUpState::LevelUpState(Game &gameRef, Player *playerRef,
     : State(gameRef), hoveredIndex(-1), player(playerRef),
       gameState(underlyingState) {
     if (!font.openFromFile("fonts/game_over.ttf")) {
-        std::cerr << "Failed to load font!" << std::endl;
+        throw ResourceLoadException("Failed to load font: fonts/game_over.ttf");
     }
 
     titleText = std::make_unique<sf::Text>(font, "LEVEL UP!", 50);

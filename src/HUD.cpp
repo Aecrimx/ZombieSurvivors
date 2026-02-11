@@ -55,6 +55,7 @@ HUD::HUD(ResourceManager &res, int width, int height) : resourceManager(res) {
     res.loadTexture("magic_gun_icon", "assets/magic_gun128x128.png");
     res.loadTexture("soul_lantern_icon", "assets/soul_lantern128x128.png");
     res.loadTexture("fire_wand_icon", "assets/fire_wand.png");
+    res.loadTexture("bone_shooter_icon", "assets/bone128x128.png");
     res.loadTexture("armor_icon", "assets/armor_item128x128.png");
     res.loadTexture("boots_icon", "assets/boots128x128.png");
     res.loadTexture("cooldown_gauntlet_icon",
@@ -142,6 +143,8 @@ void HUD::draw(sf::RenderWindow &window, const Player &player) {
             textureName = "soul_lantern_icon";
         else if (weaponName == "Fire Wand")
             textureName = "fire_wand_icon";
+        else if (weaponName == "Bone Shooter")
+            textureName = "bone_shooter_icon";
 
         if (!textureName.empty()) {
             sf::Sprite icon(resourceManager.getTexture(textureName));

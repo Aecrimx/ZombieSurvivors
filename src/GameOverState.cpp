@@ -1,6 +1,7 @@
 #include "GameOverState.h"
 #include "Game.h"
 #include "MenuState.h"
+#include "ResourceLoadException.h"
 #include <iostream>
 
 GameOverState::GameOverState(Game &gameRef, int score,
@@ -10,7 +11,7 @@ GameOverState::GameOverState(Game &gameRef, int score,
       victory(isVictory), finalScore(score), characterName(charName),
       gameState(underlyingState) {
     if (!font.openFromFile("fonts/game_over.ttf")) {
-        std::cerr << "Failed to load font!" << std::endl;
+        throw ResourceLoadException("Failed to load font: fonts/game_over.ttf");
     }
 
     std::string titleStr = victory ? "YOU WON" : "GAME OVER";

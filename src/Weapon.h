@@ -15,9 +15,13 @@ protected:
     float cooldown;
     float timer;
     ResourceManager &resources;
+    int level; // (1-3)
+    float damage; //current damage
+    float baseDamage; // de la lvl 1
 
 public:
-    Weapon(const std::string &name, float cooldown, ResourceManager &res);
+    Weapon(const std::string &name, float cooldown, ResourceManager &res,
+           float baseDmg = 10.f);
 
     virtual ~Weapon();
 
@@ -32,6 +36,11 @@ public:
     virtual void draw(sf::RenderWindow &window) const;
 
     std::string getName() const;
+
+    void levelUp();
+    bool canLevelUp() const;
+    int getLevel() const;
+    float getDamage() const;
 
     friend std::ostream &operator<<(std::ostream &os, const Weapon &obj);
 

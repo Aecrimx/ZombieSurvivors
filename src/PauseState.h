@@ -20,6 +20,7 @@ private:
 
     State *gameState;
     bool mouseWasPressed = false;
+    bool escWasPressed = false;
 
     void updateLayout(int windowWidth, int windowHeight);
 

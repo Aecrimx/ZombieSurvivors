@@ -1,4 +1,6 @@
 #include "Player.h"
+#include "Animation.h"
+#include "BoneShooter.h"
 #include "DemonicBook.h"
 #include "FireWand.h"
 #include "Item.h"
@@ -10,30 +12,66 @@ Player::Player(const CharacterData &data, ResourceManager &resources)
       currentHealth(data.maxHealth), healthRegen(0.f), level(1), currentXP(0.f),
       xpToNextLevel(50.f), facingRight(true), damageReduction(0.f),
       cooldownMultiplier(1.f) {
-    sprite.setScale({0.2f, 0.2f});
+    //pt flying skull
+    if (data.texture_name == "spinning_skull") {
+        animation = std::make_unique<Animation>(sprite);
+        const int frameW = 149;
+        const int frameH = 128;
+        const sf::Vector2u texSize =
+                resources.getTexture(data.texture_name).getSize();
+        const int frames = std::max(1u, texSize.y / frameH);
+        for (int i = 0; i < frames; ++i) {
+            animation->addFrame(
+                Frame{sf::IntRect({0, i * frameH}, {frameW, frameH}), 0.05});
+        }
+        sprite.setOrigin({frameW / 2.f, frameH / 2.f});
+        sprite.setTextureRect(sf::IntRect({0, 0}, {frameW, frameH}));
+        sprite.setScale({0.7f, 0.7f}); // Match enemy flying skull scale
+    } else {
+        sf::Vector2u size = resources.getTexture(data.texture_name).getSize();
+        sprite.setOrigin({size.x / 2.f, size.y / 2.f});
+        sprite.setScale({0.2f, 0.2f});
+    }
 
-    sf::Vector2u size = resources.getTexture(data.texture_name).getSize();
-    sprite.setOrigin({size.x / 2.f, size.y / 2.f});
     sprite.setPosition({5000.f, 5000.f});
 
     if (data.startingWeapon == "Fire wand") {
         addWeapon(std::make_unique<FireWand>(resources));
     } else if (data.startingWeapon == "Demonic Book") {
         addWeapon(std::make_unique<DemonicBook>(resources));
+    } else if (data.startingWeapon == "Bone Shooter") {
+        addWeapon(std::make_unique<BoneShooter>(resources));
     }
-    // else if (data.startingWeapon == "Bone")
-    // {addWeapon(std::make_unique<Bone>(resources));}
 }
 
 Player::~Player() = default;
 
 void Player::addWeapon(std::unique_ptr<Weapon> weapon) {
+    //verificare daca detinem arma
+    std::string weaponName = weapon->getName();
+    for (auto &w: weapons) {
+        if (w->getName() == weaponName) {
+            //lvl up
+            if (w->canLevelUp()) {
+                w->levelUp();
+                std::cout << weaponName << " leveled up to Level " << w->getLevel()
+                        << "!" << std::endl;
+            }
+            return;
+        }
+    }
+    //else adauga
     weapons.push_back(std::move(weapon));
 }
 
 void Player::update(float dt, const sf::RenderWindow &window,
                     const std::vector<std::unique_ptr<Enemy> > &enemies,
                     std::vector<Projectile> &projectiles) {
+
+    if (animation) {
+        animation->update(dt);
+    }
+
     if (healthRegen > 0.f && currentHealth < maxHealth) {
         currentHealth += healthRegen * dt;
         if (currentHealth > maxHealth)
@@ -49,14 +87,18 @@ void Player::update(float dt, const sf::RenderWindow &window,
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::A)) {
         velocity.x -= speed * dt;
         facingRight = false;
-        if (sprite.getScale().x > 0)
-            sprite.setScale({-0.2f, 0.2f});
+        if (sprite.getScale().x > 0) {
+            float scaleY = sprite.getScale().y;
+            sprite.setScale({-scaleY, scaleY});
+        }
     }
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::D)) {
         velocity.x += speed * dt;
         facingRight = true;
-        if (sprite.getScale().x < 0)
-            sprite.setScale({0.2f, 0.2f});
+        if (sprite.getScale().x < 0) {
+            float scaleY = sprite.getScale().y;
+            sprite.setScale({scaleY, scaleY});
+        }
     }
 
     if (sf::Mouse::isButtonPressed(sf::Mouse::Button::Left)) {
@@ -67,7 +109,9 @@ void Player::update(float dt, const sf::RenderWindow &window,
         float len = std::sqrt(dir.x * dir.x + dir.y * dir.y);
         if (len > 0)
             velocity += (dir / len) * speed * dt;
-    }//TODO: Basically e bug e ca se stack-eaza vectorul de movement atunci cand apas WASD si LM, sa pastrez asta ca feature ca un fel de sprint? (im bad at balancing games)
+    } // TODO: Basically e bug e ca se stack-eaza vectorul de movement atunci cand
+    // apas WASD si LM, sa pastrez asta ca feature ca un fel de sprint? (im bad
+    // at balancing games)
 
     sprite.move(velocity);
 
@@ -114,6 +158,8 @@ void Player::takeDamage(float amount) {
 void Player::addItem(std::unique_ptr<Item> item) {
     if (items.size() < 3) {
         items.push_back(std::move(item));
+        //aplicare efect instant
+        items.back()->applyEffect(*this);
     }
 }
 
@@ -171,14 +217,54 @@ std::ostream &operator<<(std::ostream &os, const Player &obj) {
 
 float Player::getHealthPoints() const { return currentHealth / maxHealth; }
 
-void Player::addXP(float amount) {
-    currentXP += amount;
-}
+void Player::addXP(float amount) { currentXP += amount; }
 
 void Player::levelUp() {
     level++;
     currentXP = 0.f;
-    xpToNextLevel = 50.f + (level * 10.f);//formula de scale de lvl-up
+    xpToNextLevel = 50.f + (level * 10.f); // formula de scale de lvl-up
+
+    //reset pt a reaplica stats
+    damageReduction = 0.f;
+    cooldownMultiplier = 1.f;
+    speed = baseSpeed;
+
+    for (const auto &item: items) {
+        item->applyEffect(*this);
+    }
+
+    //level up stuff
+    std::cout << "\n========== LEVEL UP ==========" << std::endl;
+    std::cout << "Player reached Level " << level << "!" << std::endl;
+    std::cout << "XP needed for next level: " << xpToNextLevel << std::endl;
+
+    std::cout << "\n--- Player Stats ---" << std::endl;
+    std::cout << "  Health: " << currentHealth << "/" << maxHealth << std::endl;
+    std::cout << "  Speed: " << speed << std::endl;
+    std::cout << "  Damage Reduction: " << (damageReduction * 100.f) << "%"
+            << std::endl;
+    std::cout << "  Cooldown Multiplier: " << cooldownMultiplier << "x"
+            << std::endl;
+
+    //weapon stts
+    if (!weapons.empty()) {
+        std::cout << "\n--- Weapons (" << weapons.size() << ") ---" << std::endl;
+        for (const auto &weapon: weapons) {
+            std::cout << "  " << weapon->getName() << " [Lv." << weapon->getLevel()
+                    << "] - Damage: " << weapon->getDamage() << std::endl;
+        }
+    }
+
+    //item stats
+    if (!items.empty()) {
+        std::cout << "\n--- Items (" << items.size() << ") ---" << std::endl;
+        for (const auto &item: items) {
+            std::cout << "  " << item->getName() << " [Lv." << item->getLevel() << "]"
+                    << std::endl;
+        }
+    }
+
+    std::cout << "==============================\n" << std::endl;
 }
 
 void Player::heal(float amount) {

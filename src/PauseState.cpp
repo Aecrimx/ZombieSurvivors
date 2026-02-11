@@ -74,18 +74,19 @@ void PauseState::update(float dt) {
             return;
         } else if (exitHovered) {
             game.popState();
-            game.scheduleReplace(std::make_unique<MenuState>(
-                game));
+            game.scheduleReplace(std::make_unique<MenuState>(game));
             return;
         }
     }
 
     mouseWasPressed = mouseCurrentlyPressed;
 
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Escape)) {
+    bool escCurrentlyPressed = sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Escape);
+    if (escCurrentlyPressed && !escWasPressed) {
         game.popState();
         return;
     }
+    escWasPressed = escCurrentlyPressed;
 }
 
 void PauseState::draw() {
