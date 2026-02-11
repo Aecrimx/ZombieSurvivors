@@ -2,10 +2,10 @@
 #define OOP_RESOURCEMANAGER_H
 
 #include <SFML/Graphics.hpp>
-#include <map>
-#include <string>
 #include <iostream>
-#include <stdexcept> //de scos t2
+#include <map>
+#include <stdexcept>
+#include <string>
 
 class ResourceManager {
     std::map<std::string, sf::Texture> textures;
@@ -17,10 +17,13 @@ public:
 
     sf::Texture &getTexture(const std::string &name);
 
+    bool hasTexture(const std::string &name) const;
+
+    void ensureMissingTexture();
+
     ~ResourceManager();
 
     friend std::ostream &operator<<(std::ostream &os, const ResourceManager &rm);
 };
 
-
-#endif //OOP_RESOURCEMANAGER_H
+#endif // OOP_RESOURCEMANAGER_H

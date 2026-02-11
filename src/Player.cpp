@@ -12,7 +12,7 @@ Player::Player(const CharacterData &data, ResourceManager &resources)
       currentHealth(data.maxHealth), healthRegen(0.f), level(1), currentXP(0.f),
       xpToNextLevel(50.f), facingRight(true), damageReduction(0.f),
       cooldownMultiplier(1.f) {
-    //pt flying skull
+    // pt flying skull
     if (data.texture_name == "spinning_skull") {
         animation = std::make_unique<Animation>(sprite);
         const int frameW = 149;
@@ -47,11 +47,11 @@ Player::Player(const CharacterData &data, ResourceManager &resources)
 Player::~Player() = default;
 
 void Player::addWeapon(std::unique_ptr<Weapon> weapon) {
-    //verificare daca detinem arma
+    // verificare daca detinem arma
     std::string weaponName = weapon->getName();
     for (auto &w: weapons) {
         if (w->getName() == weaponName) {
-            //lvl up
+            // lvl up
             if (w->canLevelUp()) {
                 w->levelUp();
                 std::cout << weaponName << " leveled up to Level " << w->getLevel()
@@ -60,14 +60,13 @@ void Player::addWeapon(std::unique_ptr<Weapon> weapon) {
             return;
         }
     }
-    //else adauga
+    // else adauga
     weapons.push_back(std::move(weapon));
 }
 
 void Player::update(float dt, const sf::RenderWindow &window,
                     const std::vector<std::unique_ptr<Enemy> > &enemies,
                     std::vector<Projectile> &projectiles) {
-
     if (animation) {
         animation->update(dt);
     }
@@ -158,7 +157,7 @@ void Player::takeDamage(float amount) {
 void Player::addItem(std::unique_ptr<Item> item) {
     if (items.size() < 3) {
         items.push_back(std::move(item));
-        //aplicare efect instant
+        // aplicare efect instant
         items.back()->applyEffect(*this);
     }
 }
@@ -220,11 +219,34 @@ float Player::getHealthPoints() const { return currentHealth / maxHealth; }
 void Player::addXP(float amount) { currentXP += amount; }
 
 void Player::levelUp() {
+    /*
+     * Verificare care intr-un context al unui joc endless ar fi absurda sa aiba un level maxim, insa jocul meu este facut cu ideea
+     * de a bate boss-ul la final. E aproape imposibil sa ajungi la level 100, daca ajungi, atunci modifica valoarea developer-ului ->
+     * int levelMaxMircea = 13;
+     */
+    if (level >= 100) {
+        level = 100;
+        return;
+    }
+
+    if (currentXP < 0.f) {
+        currentXP = 0.f; //How did you end here...?
+    }
+
+    if (currentHealth > maxHealth) {
+        currentHealth = maxHealth;
+    }
+
+    if (maxHealth <= 0.f) {
+        maxHealth = 100.f;
+        currentHealth = maxHealth;
+    }
+
     level++;
     currentXP = 0.f;
     xpToNextLevel = 50.f + (level * 10.f); // formula de scale de lvl-up
 
-    //reset pt a reaplica stats
+    // reset pt a reaplica stats
     damageReduction = 0.f;
     cooldownMultiplier = 1.f;
     speed = baseSpeed;
@@ -233,7 +255,7 @@ void Player::levelUp() {
         item->applyEffect(*this);
     }
 
-    //level up stuff
+    // level up stuff
     std::cout << "\n========== LEVEL UP ==========" << std::endl;
     std::cout << "Player reached Level " << level << "!" << std::endl;
     std::cout << "XP needed for next level: " << xpToNextLevel << std::endl;
@@ -246,7 +268,7 @@ void Player::levelUp() {
     std::cout << "  Cooldown Multiplier: " << cooldownMultiplier << "x"
             << std::endl;
 
-    //weapon stts
+    // weapon stts
     if (!weapons.empty()) {
         std::cout << "\n--- Weapons (" << weapons.size() << ") ---" << std::endl;
         for (const auto &weapon: weapons) {
@@ -255,7 +277,7 @@ void Player::levelUp() {
         }
     }
 
-    //item stats
+    // item stats
     if (!items.empty()) {
         std::cout << "\n--- Items (" << items.size() << ") ---" << std::endl;
         for (const auto &item: items) {

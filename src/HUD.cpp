@@ -1,4 +1,6 @@
 #include "HUD.h"
+#include "ResourceLoadException.h"
+#include <iostream>
 
 HUD::HUD(ResourceManager &res, int width, int height) : resourceManager(res) {
     uiView.setSize(
@@ -6,8 +8,13 @@ HUD::HUD(ResourceManager &res, int width, int height) : resourceManager(res) {
     uiView.setCenter(sf::Vector2f(static_cast<float>(width) / 2.f,
                                   static_cast<float>(height) / 2.f));
 
-    if (!font.openFromFile("fonts/game_over.ttf")) {
-        std::cerr << "Failed to load HUD font!" << std::endl;
+    try {
+        if (!font.openFromFile("fonts/game_over.ttf")) {
+            throw ResourceLoadException("fonts/game_over.ttf");
+        }
+    } catch (const ResourceLoadException &e) {
+        std::cout << "Warning: " << e.what() << " - Font is missing from its designated spot (fonts/game_over.ttf)"
+                << std::endl;
     }
 
     timerText = std::make_unique<sf::Text>(font, "00:00", 32);

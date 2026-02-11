@@ -1,8 +1,8 @@
 #include "SaveManager.h"
+#include "json.hpp"
 #include <iostream>
 #include <sys/stat.h>
 #include <sys/types.h>
-#include "json.hpp"
 
 using nlohmann::json;
 
@@ -11,9 +11,7 @@ using nlohmann::json;
 #define mkdir(dir, mode) _mkdir(dir)
 #endif
 
-SaveManager::SaveManager() : saveFilePath("saves/save.json") {
-    loadSave();
-}
+SaveManager::SaveManager() : saveFilePath("saves/save.json") { loadSave(); }
 
 void SaveManager::loadSave() {
     std::ifstream file(saveFilePath);
@@ -31,10 +29,12 @@ void SaveManager::loadSave() {
         data = SaveData();
 
         if (j.contains("characters") && j["characters"].is_object()) {
-            for (auto it = j["characters"].begin(); it != j["characters"].end(); ++it) {
+            for (auto it = j["characters"].begin(); it != j["characters"].end();
+                 ++it) {
                 const std::string name = it.key();
                 const auto &cobj = it.value();
-                if (!cobj.is_object()) continue;
+                if (!cobj.is_object())
+                    continue;
                 bool unlocked = cobj.value("unlocked", data.characters[name].unlocked);
                 int hs = cobj.value("high_score", data.characters[name].highScore);
                 data.characters[name] = CharacterSaveData(unlocked, hs);
@@ -43,11 +43,11 @@ void SaveManager::loadSave() {
 
         if (j.contains("stats") && j["stats"].is_object()) {
             const auto &s = j["stats"];
-            data.flyingSkullKills = s.value("flying_skull_kills", data.flyingSkullKills);
+            data.flyingSkullKills =
+                    s.value("flying_skull_kills", data.flyingSkullKills);
             data.totalWins = s.value("total_wins", data.totalWins);
         }
     } catch (const std::exception &e) {
-        std::cerr << "Failed to parse file, resetting to defaults: " << e.what() << std::endl;
         data = SaveData();
     }
 
@@ -60,7 +60,7 @@ void SaveManager::saveSave() {
 
     std::ofstream file(saveFilePath);
     if (!file.is_open()) {
-        std::cerr << "Failed to create save file." << std::endl;
+        //continue, se va repara fisierul ca un default.
         return;
     }
 

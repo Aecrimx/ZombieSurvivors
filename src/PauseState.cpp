@@ -1,13 +1,19 @@
 #include "PauseState.h"
 #include "Game.h"
 #include "MenuState.h"
+#include "ResourceLoadException.h"
 #include <iostream>
 
 PauseState::PauseState(Game &gameRef, State *underlyingState)
     : State(gameRef), continueHovered(false), exitHovered(false),
       gameState(underlyingState) {
-    if (!font.openFromFile("fonts/game_over.ttf")) {
-        std::cerr << "Failed to load font!" << std::endl;
+    try {
+        if (!font.openFromFile("fonts/game_over.ttf")) {
+            throw ResourceLoadException("fonts/game_over.ttf");
+        }
+    } catch (const ResourceLoadException &e) {
+        std::cout << "Warning: " << e.what()
+                << " - Font is missing from its designated spot." << std::endl;
     }
 
     titleText = std::make_unique<sf::Text>(font, "PAUSED", 60);
@@ -81,7 +87,8 @@ void PauseState::update(float dt) {
 
     mouseWasPressed = mouseCurrentlyPressed;
 
-    bool escCurrentlyPressed = sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Escape);
+    bool escCurrentlyPressed =
+            sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Escape);
     if (escCurrentlyPressed && !escWasPressed) {
         game.popState();
         return;
