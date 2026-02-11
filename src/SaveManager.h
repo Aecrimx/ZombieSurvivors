@@ -29,7 +29,7 @@ public:
 
     void saveSave();
 
-    const SaveData &getData() const { return data; }
+    // const SaveData &getData() const { return data; }
 
     bool isCharacterUnlocked(const std::string &character) const;
 
@@ -37,9 +37,9 @@ public:
 
     void updateHighScore(const std::string &character, int score);
 
-    void unlockCharacter(const std::string &character);
+    // void unlockCharacter(const std::string &character);
 
-    int getFlyingSkullKills() const { return data.flyingSkullKills; }
+    // int getFlyingSkullKills() const { return data.flyingSkullKills; }
 
     void incrementFlyingSkullKills();
 

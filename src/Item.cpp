@@ -35,13 +35,13 @@ bool Item::canLevelUp() const { return level < 3; }
 
 int Item::getLevel() const { return level; }
 
-const std::string& Item::getName() const { return name; }
+const std::string &Item::getName() const { return name; }
 
-const sf::Sprite *Item::getIcon() const { return iconSprite.get(); }
+// const sf::Sprite *Item::getIcon() const { return iconSprite.get(); }
 
-void Item::setIcon(const sf::Texture &texture) {
-    iconSprite = std::make_unique<sf::Sprite>(texture);
-}
+// void Item::setIcon(const sf::Texture &texture) {
+//     iconSprite = std::make_unique<sf::Sprite>(texture);
+// }
 
 std::ostream &operator<<(std::ostream &os, const Item &obj) {
     obj.print(os);

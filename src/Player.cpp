@@ -197,32 +197,33 @@ void Player::setDamageReduction(float reduction) {
 
 void Player::setCooldownMultiplier(float mult) { cooldownMultiplier = mult; }
 
-float Player::getDamageReduction() const { return damageReduction; }
+// float Player::getDamageReduction() const { return damageReduction; }
 
-float Player::getCooldownMultiplier() const { return cooldownMultiplier; }
+// float Player::getCooldownMultiplier() const { return cooldownMultiplier; }
 
 void Player::increaseSpeed(float multiplier) { speed = baseSpeed * multiplier; }
 
-float Player::getSpeed() const { return speed; }
+// float Player::getSpeed() const { return speed; }
 
 sf::FloatRect Player::getBounds() const { return sprite.getGlobalBounds(); }
 
-bool Player::isFacingRight() const { return facingRight; }
+// bool Player::isFacingRight() const { return facingRight; }
 
 std::ostream &operator<<(std::ostream &os, const Player &obj) {
     obj.print(os);
     return os;
 }
 
-float Player::getHealthPoints() const { return currentHealth / maxHealth; }
+// float Player::getHealthPoints() const { return currentHealth / maxHealth; }
 
 void Player::addXP(float amount) { currentXP += amount; }
 
 void Player::levelUp() {
     /*
-     * Verificare care intr-un context al unui joc endless ar fi absurda sa aiba un level maxim, insa jocul meu este facut cu ideea
-     * de a bate boss-ul la final. E aproape imposibil sa ajungi la level 100, daca ajungi, atunci modifica valoarea developer-ului ->
-     * int levelMaxMircea = 13;
+     * Verificare care intr-un context al unui joc endless ar fi absurda sa aiba
+     * un level maxim, insa jocul meu este facut cu ideea de a bate boss-ul la
+     * final. E aproape imposibil sa ajungi la level 100, daca ajungi, atunci
+     * modifica valoarea developer-ului -> int levelMaxMircea = 13;
      */
     if (level >= 100) {
         level = 100;
@@ -230,7 +231,7 @@ void Player::levelUp() {
     }
 
     if (currentXP < 0.f) {
-        currentXP = 0.f; //How did you end here...?
+        currentXP = 0.f; // How did you end here...?
     }
 
     if (currentHealth > maxHealth) {

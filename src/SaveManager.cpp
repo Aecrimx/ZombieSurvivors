@@ -1,6 +1,6 @@
 #include "SaveManager.h"
-#include "json.hpp"
 #include <iostream>
+#include <json.hpp>
 #include <sys/stat.h>
 #include <sys/types.h>
 
@@ -60,7 +60,7 @@ void SaveManager::saveSave() {
 
     std::ofstream file(saveFilePath);
     if (!file.is_open()) {
-        //continue, se va repara fisierul ca un default.
+        // continue, se va repara fisierul ca un default.
         return;
     }
 
@@ -108,13 +108,13 @@ void SaveManager::updateHighScore(const std::string &character, int score) {
     }
 }
 
-void SaveManager::unlockCharacter(const std::string &character) {
-    auto it = data.characters.find(character);
-    if (it != data.characters.end()) {
-        it->second.unlocked = true;
-        saveSave();
-    }
-}
+// void SaveManager::unlockCharacter(const std::string &character) {
+//     auto it = data.characters.find(character);
+//     if (it != data.characters.end()) {
+//         it->second.unlocked = true;
+//         saveSave();
+//     }
+// }
 
 void SaveManager::incrementFlyingSkullKills() {
     data.flyingSkullKills++;

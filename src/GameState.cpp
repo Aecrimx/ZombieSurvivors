@@ -113,7 +113,7 @@ void GameState::Resize(int w, int h) {
     }
 }
 
-std::vector<Projectile> &GameState::getProjectiles() { return projectiles; }
+// std::vector<Projectile> &GameState::getProjectiles() { return projectiles; }
 
 std::ostream &operator<<(std::ostream &os, const GameState &) {
     return os << "[GameState]" << '\n';

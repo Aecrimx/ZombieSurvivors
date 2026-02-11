@@ -53,7 +53,6 @@ GameOverState::GameOverState(Game &gameRef, int score,
 }
 
 void GameOverState::updateLayout(int windowWidth, int windowHeight) {
-    float centerX = windowWidth / 2.f;
     float startY = windowHeight / 5.f;
 
     if (titleText) {

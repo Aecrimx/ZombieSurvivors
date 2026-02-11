@@ -7,7 +7,7 @@ Animation::Animation(sf::Sprite &target) : target(target) {
 
 Animation::~Animation() = default;
 
-void Animation::addFrame(Frame&& frame) {
+void Animation::addFrame(Frame &&frame) {
     totalLength += frame.duration;
     frames.push_back(std::move(frame));
 }
@@ -23,7 +23,7 @@ void Animation::update(double elapsed) {
 
     double time = progress;
 
-    for (const auto& frame : frames) {
+    for (const auto &frame: frames) {
         if (time <= frame.duration) {
             target.setTextureRect(frame.rect);
             return;
@@ -34,4 +34,4 @@ void Animation::update(double elapsed) {
     target.setTextureRect(frames.back().rect);
 }
 
-double Animation::getLength() const {return totalLength;}
+// double Animation::getLength() const {return totalLength;}
