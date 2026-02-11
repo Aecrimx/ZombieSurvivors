@@ -15,15 +15,13 @@ Weapon *Weapon::copy() const { return clone(); }
 
 void Weapon::draw(sf::RenderWindow &window) const {}
 
-std::string Weapon::getName() const { return name; }
+const std::string& Weapon::getName() const { return name; }
 
 void Weapon::levelUp() {
   if (level < 3) {
     level++;
-    // Increase damage by 20% per level
-    damage = baseDamage * (1.0f + (level - 1) * 0.2f);
-    // Reduce cooldown by 10% per level
-    cooldown = cooldown * 0.9f;
+    damage = baseDamage * (1.0f + (level - 1) * 0.2f); // 20% mai mult damage
+    cooldown = cooldown * 0.9f; // 10% reducere cooldown
   }
 }
 

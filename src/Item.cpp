@@ -35,7 +35,7 @@ bool Item::canLevelUp() const { return level < 3; }
 
 int Item::getLevel() const { return level; }
 
-std::string Item::getName() const { return name; }
+const std::string& Item::getName() const { return name; }
 
 const sf::Sprite *Item::getIcon() const { return iconSprite.get(); }
 

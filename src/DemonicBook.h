@@ -13,7 +13,7 @@ private:
     float auraRadiusScale;
     float tickTimer;
     float tickInterval;
-    float damage;
+    float damage_;
     sf::Sprite auraSprite;
 
 public:

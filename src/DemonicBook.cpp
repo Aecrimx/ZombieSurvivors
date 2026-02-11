@@ -2,7 +2,7 @@
 
 DemonicBook::DemonicBook(ResourceManager &res)
     : Weapon("Demonic Book", 0.f, res), auraRadius(0.f), auraRadiusScale(4.0f),
-      tickTimer(0.f), tickInterval(1.5f), damage(25.f),
+      tickTimer(0.f), tickInterval(1.5f), damage_(25.f),
       auraSprite(res.getTexture("damage_aura")) {
     sf::Vector2u size = res.getTexture("damage_aura").getSize();
     auraSprite.setOrigin({size.x / 2.f, size.y / 2.f});
@@ -30,7 +30,7 @@ void DemonicBook::update(float dt, sf::Vector2f playerPos,
             float radiusSq = auraRadius * auraRadius;
 
             if (distSq <= radiusSq) {
-                enemy->damageTaken(damage);
+                enemy->damageTaken(damage_);
             }
         }
         tickTimer -= tickInterval;
@@ -44,5 +44,5 @@ void DemonicBook::draw(sf::RenderWindow &window) const {
 void DemonicBook::print(std::ostream &os) const {
     os << "[DemonicBook]\n";
     os << "Name: " << name << " Cooldown: " << cooldown
-            << " AuraRadius: " << auraRadius << " Damage: " << damage;
+            << " AuraRadius: " << auraRadius << " Damage: " << damage_;
 }

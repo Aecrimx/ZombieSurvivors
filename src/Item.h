@@ -30,7 +30,7 @@ public:
 
     int getLevel() const;
 
-    std::string getName() const;
+    const std::string& getName() const;
 
     // ui stuff
     const sf::Sprite *getIcon() const;

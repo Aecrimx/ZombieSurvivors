@@ -20,7 +20,7 @@ class Animation {
     sf::Sprite &target;
 
 public:
-    Animation(sf::Sprite &target);
+    explicit Animation(sf::Sprite &target);
     virtual ~Animation();
     void addFrame(Frame&& frame);
     void update(double elapsed);

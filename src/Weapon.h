@@ -35,7 +35,7 @@ public:
 
     virtual void draw(sf::RenderWindow &window) const;
 
-    std::string getName() const;
+    const std::string& getName() const;
 
     void levelUp();
     bool canLevelUp() const;

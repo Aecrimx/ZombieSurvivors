@@ -88,14 +88,14 @@ void LevelUpState::generateOptions() {
             });
     }
 
-    for (auto &item: items) {
+    for (const std::unique_ptr<Item> &item: items) { // chiar daca auto deduce corect cppcheck tot cere const???? declarare explicita atunci
         if (item->canLevelUp()) {
             std::string itemName = item->getName();
             allUpgrades.push_back({
                 itemName + " Level Up",
                 "Upgrade " + itemName + " to Level " +
                 std::to_string(item->getLevel() + 1),
-                [itemName](Player &p) {
+                [itemName](const Player &p) {
                     for (auto &i: p.getItems()) {
                         if (i->getName() == itemName &&
                             i->canLevelUp()) {
