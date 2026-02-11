@@ -15,7 +15,7 @@ Weapon *DemonicBook::clone() const { return new DemonicBook(*this); }
 
 void DemonicBook::update(float dt, sf::Vector2f playerPos,
                          const std::vector<std::unique_ptr<Enemy> > &enemies,
-                         std::vector<Projectile> &projectiles) {
+                         std::vector<Projectile> & /*projectiles*/) {
     tickTimer += dt;
 
     auraSprite.setPosition(playerPos);
