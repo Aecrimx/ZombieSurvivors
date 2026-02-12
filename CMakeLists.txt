@@ -111,6 +111,8 @@ add_executable(${MAIN_EXECUTABLE_NAME}
         src/SoulLantern.h
         src/BoneShooter.cpp
         src/BoneShooter.h
+        src/Knife.cpp
+        src/Knife.h
         src/MenuState.cpp
         src/MenuState.h
         src/LevelUpState.cpp

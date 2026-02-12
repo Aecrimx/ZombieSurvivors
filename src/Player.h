@@ -22,8 +22,8 @@ struct CharacterData {
     std::string startingWeapon;
     std::string Weapon_sprite;
 
-    CharacterData(std::string n, const std::string &tex, float speed,
-                  float hp, const std::string &weapon, const std::string &wSprite)
+    CharacterData(std::string n, const std::string &tex, float speed, float hp,
+                  const std::string &weapon, const std::string &wSprite)
         : name(std::move(n)), texture_name(tex), moveSpeed(speed), maxHealth(hp),
           startingWeapon(weapon), Weapon_sprite(wSprite) {
     }
@@ -109,23 +109,23 @@ public:
 
     void setCooldownMultiplier(float mult);
 
-    //float getDamageReduction() const;
+    // float getDamageReduction() const;
 
-    //float getCooldownMultiplier() const;
+    // float getCooldownMultiplier() const;
 
     void increaseSpeed(float multiplier);
 
-    //float getSpeed() const;
+    // float getSpeed() const;
 
     sf::Vector2f getPos() const;
 
     sf::FloatRect getBounds() const;
 
-    //bool isFacingRight() const;
+    bool isFacingRight() const;
 
     friend std::ostream &operator<<(std::ostream &os, const Player &obj);
 
-    //float getHealthPoints() const;
+    // float getHealthPoints() const;
 
 private:
     virtual void print(std::ostream &os) const {

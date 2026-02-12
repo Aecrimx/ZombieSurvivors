@@ -2,7 +2,8 @@
 #include "ResourceLoadException.h"
 #include <iostream>
 
-HUD::HUD(ResourceManager &res, const int width, const int height) : resourceManager(res) {
+HUD::HUD(ResourceManager &res, const int width, const int height)
+    : resourceManager(res) {
     uiView.setSize(
         sf::Vector2f(static_cast<float>(width), static_cast<float>(height)));
     uiView.setCenter(sf::Vector2f(static_cast<float>(width) / 2.f,
@@ -13,7 +14,9 @@ HUD::HUD(ResourceManager &res, const int width, const int height) : resourceMana
             throw ResourceLoadException("fonts/game_over.ttf");
         }
     } catch (const ResourceLoadException &e) {
-        std::cout << "Warning: " << e.what() << " - Font is missing from its designated spot (fonts/game_over.ttf)"
+        std::cout
+                << "Warning: " << e.what()
+                << " - Font is missing from its designated spot (fonts/game_over.ttf)"
                 << std::endl;
     }
 
@@ -63,6 +66,7 @@ HUD::HUD(ResourceManager &res, const int width, const int height) : resourceMana
     res.loadTexture("soul_lantern_icon", "assets/soul_lantern128x128.png");
     res.loadTexture("fire_wand_icon", "assets/fire_wand.png");
     res.loadTexture("bone_shooter_icon", "assets/bone128x128.png");
+    res.loadTexture("knife_icon", "assets/knife128x128.png");
     res.loadTexture("armor_icon", "assets/armor_item128x128.png");
     res.loadTexture("boots_icon", "assets/boots128x128.png");
     res.loadTexture("cooldown_gauntlet_icon",
@@ -152,6 +156,8 @@ void HUD::draw(sf::RenderWindow &window, const Player &player) {
             textureName = "fire_wand_icon";
         else if (weaponName == "Bone Shooter")
             textureName = "bone_shooter_icon";
+        else if (weaponName == "Knife")
+            textureName = "knife_icon";
 
         if (!textureName.empty()) {
             sf::Sprite icon(resourceManager.getTexture(textureName));

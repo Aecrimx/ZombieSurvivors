@@ -30,6 +30,8 @@ GameState::GameState(Game &ref) : State(ref) {
     res.loadTexture("demonic_book", "assets/demonic_book32x32.png");
     res.loadTexture("laser_projectile", "assets/laser_projectile512x16.png");
     res.loadTexture("skull", "assets/skull_projectile.png");
+    res.loadTexture("knife", "assets/knife128x128.png");
+    res.loadTexture("knife_projectile", "assets/knife_projectile32x16.png");
     res.loadTexture("background", "assets/grass.png");
     res.getTexture("background").setRepeated(true);
 
@@ -75,6 +77,8 @@ GameState::GameState(Game &gameRef, const CharacterData &charData)
     res.loadTexture("skull", "assets/skull_projectile.png");
     res.loadTexture("dumbbell", "assets/dumbbell.png");
     res.loadTexture("bone", "assets/bone128x128.png");
+    res.loadTexture("knife", "assets/knife128x128.png");
+    res.loadTexture("knife_projectile", "assets/knife_projectile32x16.png");
     res.loadTexture("background", "assets/grass.png");
     res.loadTexture("soul_Scream", "assets/soul_Scream32x64.png");
 
@@ -251,13 +255,13 @@ void GameState::update(const float dt) {
         if (contactDamageCooldown <= 0.f) {
             const sf::FloatRect enemyBounds = enemy->getBounds();
             const bool collides = (playerBounds.position.x <
-                             enemyBounds.position.x + enemyBounds.size.x &&
-                             playerBounds.position.x + playerBounds.size.x >
-                             enemyBounds.position.x &&
-                             playerBounds.position.y <
-                             enemyBounds.position.y + enemyBounds.size.y &&
-                             playerBounds.position.y + playerBounds.size.y >
-                             enemyBounds.position.y);
+                                   enemyBounds.position.x + enemyBounds.size.x &&
+                                   playerBounds.position.x + playerBounds.size.x >
+                                   enemyBounds.position.x &&
+                                   playerBounds.position.y <
+                                   enemyBounds.position.y + enemyBounds.size.y &&
+                                   playerBounds.position.y + playerBounds.size.y >
+                                   enemyBounds.position.y);
             if (collides) {
                 player->takeDamage(enemy->getDamage());
                 contactDamageCooldown = 1.0f;
@@ -275,9 +279,9 @@ void GameState::update(const float dt) {
         if (it->isHostile() && player) {
             const sf::FloatRect pb = player->getBounds();
             const bool overlapP = (a.position.x < pb.position.x + pb.size.x &&
-                             a.position.x + a.size.x > pb.position.x &&
-                             a.position.y < pb.position.y + pb.size.y &&
-                             a.position.y + a.size.y > pb.position.y);
+                                   a.position.x + a.size.x > pb.position.x &&
+                                   a.position.y < pb.position.y + pb.size.y &&
+                                   a.position.y + a.size.y > pb.position.y);
             if (overlapP) {
                 player->takeDamage(it->getDamage());
                 hit = true;
@@ -288,9 +292,9 @@ void GameState::update(const float dt) {
             for (const auto &enemy: enemies) {
                 const sf::FloatRect b = enemy->getBounds();
                 const bool overlap = (a.position.x < b.position.x + b.size.x &&
-                                a.position.x + a.size.x > b.position.x &&
-                                a.position.y < b.position.y + b.size.y &&
-                                a.position.y + a.size.y > b.position.y);
+                                      a.position.x + a.size.x > b.position.x &&
+                                      a.position.y < b.position.y + b.size.y &&
+                                      a.position.y + a.size.y > b.position.y);
                 if (overlap) {
                     enemy->damageTaken(it->getDamage());
                     hit = true;

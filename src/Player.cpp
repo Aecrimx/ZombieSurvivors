@@ -207,7 +207,7 @@ void Player::increaseSpeed(float multiplier) { speed = baseSpeed * multiplier; }
 
 sf::FloatRect Player::getBounds() const { return sprite.getGlobalBounds(); }
 
-// bool Player::isFacingRight() const { return facingRight; }
+bool Player::isFacingRight() const { return facingRight; }
 
 std::ostream &operator<<(std::ostream &os, const Player &obj) {
     obj.print(os);

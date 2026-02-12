@@ -6,6 +6,7 @@
 #include "FireWand.h"
 #include "Game.h"
 #include "HeartCrystal.h"
+#include "Knife.h"
 #include "MagicGun.h"
 #include "ResourceLoadException.h"
 #include "SoulLantern.h"
@@ -87,7 +88,10 @@ void LevelUpState::generateOptions() {
             });
     }
 
-    for (const std::unique_ptr<Item> &item: items) { // chiar daca auto deduce corect cppcheck tot cere const???? declarare explicita atunci
+    for (const std::unique_ptr<Item> &item:
+         items) {
+        // chiar daca auto deduce corect cppcheck tot cere const????
+        // declarare explicita atunci
         if (item->canLevelUp()) {
             std::string itemName = item->getName();
             allUpgrades.push_back({
@@ -111,7 +115,7 @@ void LevelUpState::generateOptions() {
     const auto &weapons = player->getWeapons();
     if (weapons.size() < 3) {
         bool hasMagicGun = false, hasSoulLantern = false, hasFireWand = false,
-                hasDemonicBook = false;
+                hasDemonicBook = false, hasKnife = false;
         for (const auto &weapon: weapons) {
             if (weapon->getName() == "Magic Gun")
                 hasMagicGun = true;
@@ -121,6 +125,8 @@ void LevelUpState::generateOptions() {
                 hasFireWand = true;
             if (weapon->getName() == "Demonic Book")
                 hasDemonicBook = true;
+            if (weapon->getName() == "Knife")
+                hasKnife = true;
         }
 
         if (!hasMagicGun) {
@@ -161,6 +167,17 @@ void LevelUpState::generateOptions() {
                     [this](Player &p) {
                         p.addWeapon(
                             std::make_unique<DemonicBook>(game.getResourceManager()));
+                    },
+                    true
+                });
+        }
+        if (!hasKnife) {
+            allUpgrades.push_back(
+                {
+                    "Knife", "Throws a knife in the direction you're facing.",
+                    [this](Player &p) {
+                        p.addWeapon(
+                            std::make_unique<Knife>(game.getResourceManager(), &p));
                     },
                     true
                 });
@@ -256,7 +273,7 @@ void LevelUpState::handleInput() {
 void LevelUpState::update(float /*dt*/) {
     const sf::Vector2i mousePos = sf::Mouse::getPosition(game.getWindow());
     const sf::Vector2f mousePosF(static_cast<float>(mousePos.x),
-                           static_cast<float>(mousePos.y));
+                                 static_cast<float>(mousePos.y));
 
     hoveredIndex = -1;
     for (size_t i = 0; i < options.size(); ++i) {
