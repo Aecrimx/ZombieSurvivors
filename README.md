@@ -206,3 +206,4 @@ Libraries
 All assets have been made by me using [Paint.net](https://www.getpaint.net/) :D except:
 - [Spinning Skull Gif](https://tenor.com/view/skull-skullgif-gif-24419301) by Unknown (its a viral meme i can not find the original creator)
 - [Backgound Castle Image](https://ro.wikipedia.org/wiki/Fi%C8%99ier:01_Chateau_Peles.jpg) by Wikipedia User [Myrabella](https://commons.wikimedia.org/wiki/User:Myrabella)
+- [game_over.ttf font](https://www.dafont.com/game-over.font)
