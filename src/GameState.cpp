@@ -1,8 +1,6 @@
 #include "GameState.h"
 #include "Bat.h"
 #include "BigZombieBoss.h"
-#include "DemonicBook.h"
-#include "FireWand.h"
 #include "Game.h"
 #include "GameOverState.h"
 #include "KnightZombie.h"
@@ -124,10 +122,14 @@ std::ostream &operator<<(std::ostream &os, const GameState &) {
 }
 
 void GameState::handleInput() {
-    const bool escCurrentlyPressed =
-            sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Escape);
-    if (escCurrentlyPressed && !escWasPressed) {
-        game.pushState(std::make_unique<PauseState>(game, this));
+}
+
+void GameState::handleEvent(const sf::Event &event) {
+    if (const auto *keyPressed = event.getIf<sf::Event::KeyPressed>()) {
+        if (keyPressed->scancode == sf::Keyboard::Scancode::Escape) {
+            std::cout << "Esc pressed" << std::endl;
+            game.pushState(std::make_unique<PauseState>(game, this));
+        }
     }
 }
 
@@ -343,7 +345,6 @@ void GameState::update(const float dt) {
         hud->update(*player, gameTimer);
     }
 
-    escWasPressed = sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Escape);
 }
 
 void GameState::draw() {

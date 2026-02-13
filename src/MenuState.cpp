@@ -6,9 +6,8 @@
 
 MenuState::MenuState(Game &gameRef)
     : State(gameRef), hoveredIndex(-1), selectedIndex(-1) {
-    if (!font.openFromFile("fonts/game_over.ttf")) {
-        throw ResourceLoadException("Failed to load font: fonts/game_over.ttf");
-    }
+
+    const auto& font = game.getResourceManager().getFont("game_over");
 
     // bakcground image
     ResourceManager &res = game.getResourceManager();
@@ -84,6 +83,7 @@ void MenuState::setupCharacters() {
     skull.sprite->setTextureRect(sf::IntRect({0, 0}, {frameW, frameH}));
 
     // setup character cards
+    const auto& font = game.getResourceManager().getFont("game_over");
     for (auto *card: {&wizard, &demon, &skull}) {
         card->nameText = std::make_unique<sf::Text>(font, card->name, 48);
         card->nameText->setFillColor(sf::Color::White);
@@ -171,16 +171,19 @@ void MenuState::updateLayout(int windowWidth, int windowHeight) {
 void MenuState::handleInput() {
 }
 
+void MenuState::handleEvent(const sf::Event &event) {
+    if (const auto *keyPressed = event.getIf<sf::Event::KeyPressed>()) {
+        if (keyPressed->scancode == sf::Keyboard::Scancode::Escape) {
+            game.getWindow().close();
+        }
+    }
+}
+
 void MenuState::update(float dt) {
     for (auto &card: characters) {
         if (card.animation) {
             card.animation->update(dt);
         }
-    }
-
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Escape)) {
-        game.getWindow().close();
-        return;
     }
 
     sf::Vector2i mousePos = sf::Mouse::getPosition(game.getWindow());

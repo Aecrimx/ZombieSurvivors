@@ -9,9 +9,8 @@ GameOverState::GameOverState(Game &gameRef, const int score,
     : State(gameRef), retryHovered(false), menuHovered(false),
       victory(isVictory), finalScore(score), characterName(charName),
       gameState(underlyingState) {
-    if (!font.openFromFile("fonts/game_over.ttf")) {
-        throw ResourceLoadException("Failed to load font: fonts/game_over.ttf");
-    }
+
+    const auto& font = game.getResourceManager().getFont("game_over");
 
     std::string titleStr = victory ? "YOU WON" : "GAME OVER";
     const sf::Color titleColor = victory ? sf::Color::Yellow : sf::Color::Red;

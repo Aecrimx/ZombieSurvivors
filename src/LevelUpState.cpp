@@ -17,9 +17,8 @@ LevelUpState::LevelUpState(Game &gameRef, Player *playerRef,
                            State *underlyingState)
     : State(gameRef), gameState(underlyingState), hoveredIndex(-1),
       player(playerRef) {
-    if (!font.openFromFile("fonts/game_over.ttf")) {
-        throw ResourceLoadException("Failed to load font: fonts/game_over.ttf");
-    }
+
+    const auto& font = game.getResourceManager().getFont("game_over");
 
     titleText = std::make_unique<sf::Text>(font, "LEVEL UP!", 50);
     titleText->setFillColor(sf::Color::Yellow);
@@ -222,6 +221,8 @@ void LevelUpState::generateOptions() {
         opt.description = available[i].desc;
         opt.applyUpgrade = available[i].apply;
         opt.hovered = false;
+
+        const auto& font = game.getResourceManager().getFont("game_over");
 
         opt.nameText = std::make_unique<sf::Text>(font, opt.name, 28);
         opt.nameText->setFillColor(sf::Color::White);

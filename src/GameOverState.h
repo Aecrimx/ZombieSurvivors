@@ -8,7 +8,7 @@
 
 class GameOverState : public State {
 private:
-    sf::Font font;
+    // sf::Font font;
     std::unique_ptr<sf::Text> titleText;
     std::unique_ptr<sf::Text> scoreText;
     std::unique_ptr<sf::Text> highScoreText;

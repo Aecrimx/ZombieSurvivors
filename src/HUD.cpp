@@ -9,16 +9,7 @@ HUD::HUD(ResourceManager &res, const int width, const int height)
     uiView.setCenter(sf::Vector2f(static_cast<float>(width) / 2.f,
                                   static_cast<float>(height) / 2.f));
 
-    try {
-        if (!font.openFromFile("fonts/game_over.ttf")) {
-            throw ResourceLoadException("fonts/game_over.ttf");
-        }
-    } catch (const ResourceLoadException &e) {
-        std::cout
-                << "Warning: " << e.what()
-                << " - Font is missing from its designated spot (fonts/game_over.ttf)"
-                << std::endl;
-    }
+    const sf::Font &font = resourceManager.getFont("game_over");
 
     timerText = std::make_unique<sf::Text>(font, "00:00", 32);
     timerText->setFillColor(sf::Color::White);

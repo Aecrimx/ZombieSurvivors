@@ -7,14 +7,8 @@
 PauseState::PauseState(Game &gameRef, State *underlyingState)
     : State(gameRef), continueHovered(false), exitHovered(false),
       gameState(underlyingState) {
-    try {
-        if (!font.openFromFile("fonts/game_over.ttf")) {
-            throw ResourceLoadException("fonts/game_over.ttf");
-        }
-    } catch (const ResourceLoadException &e) {
-        std::cout << "Warning: " << e.what()
-                << " - Font is missing from its designated spot." << std::endl;
-    }
+
+    const auto& font = game.getResourceManager().getFont("game_over");
 
     titleText = std::make_unique<sf::Text>(font, "PAUSED", 60);
     titleText->setFillColor(sf::Color::White);
@@ -55,6 +49,14 @@ void PauseState::updateLayout(int windowWidth, int windowHeight) {
 void PauseState::handleInput() {
 }
 
+void PauseState::handleEvent(const sf::Event &event) {
+    if (const auto *keyPressed = event.getIf<sf::Event::KeyPressed>()) {
+        if (keyPressed->scancode == sf::Keyboard::Scancode::Escape) {
+            game.popState();
+        }
+    }
+}
+
 void PauseState::update(float /*dt*/) {
     sf::Vector2i mousePos = sf::Mouse::getPosition(game.getWindow());
     sf::Vector2f mousePosF(static_cast<float>(mousePos.x),
@@ -86,14 +88,6 @@ void PauseState::update(float /*dt*/) {
     }
 
     mouseWasPressed = mouseCurrentlyPressed;
-
-    bool escCurrentlyPressed =
-            sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Escape);
-    if (escCurrentlyPressed && !escWasPressed) {
-        game.popState();
-        return;
-    }
-    escWasPressed = escCurrentlyPressed;
 }
 
 void PauseState::draw() {

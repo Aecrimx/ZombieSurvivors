@@ -18,6 +18,8 @@ public:
 
     virtual void handleInput() = 0;
 
+    virtual void handleEvent(const sf::Event &/*event*/) {}
+
     virtual void update(float dt) = 0;
 
     virtual void draw() = 0;

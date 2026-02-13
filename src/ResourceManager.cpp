@@ -19,13 +19,22 @@ void ResourceManager::ensureMissingTexture() {
 
 void ResourceManager::loadTexture(const std::string &name,
                                   const std::string &path) {
+    try {
+        loadTextureInternal(name, path);
+    } catch (const ResourceLoadException &e) {
+        std::cerr << "Error loading texture: " << e.what() << std::endl;
+        std::cerr << "Using missing texture for: " << name << std::endl;
+        if (hasTexture("missing_texture")) {
+            textures[name] = textures["missing_texture"];
+        }
+    }
+}
+
+void ResourceManager::loadTextureInternal(const std::string &name, const std::string &path) {
     ensureMissingTexture();
 
     sf::Texture texture;
     if (!texture.loadFromFile(path)) {
-        if (hasTexture("missing_texture")) {
-            textures[name] = textures["missing_texture"];
-        }
         throw ResourceLoadException(path);
     }
     textures[name] = std::move(texture);
@@ -60,4 +69,20 @@ std::ostream &operator<<(std::ostream &os, const ResourceManager &rm) {
                 << "]\n";
     }
     return os;
+}
+
+void ResourceManager::loadFont(const std::string &name, const std::string &path) {
+    sf::Font font;
+    if (!font.openFromFile(path)) {
+        throw ResourceLoadException(path);
+    }
+    fonts[name] = font;
+}
+
+sf::Font &ResourceManager::getFont(const std::string &name) {
+    auto it = fonts.find(name);
+    if (it == fonts.end()) {
+        throw ResourceLoadException("Font not found: " + name);
+    }
+    return it->second;
 }

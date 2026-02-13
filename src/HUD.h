@@ -13,7 +13,7 @@
 
 class HUD {
     sf::View uiView;
-    sf::Font font;
+    // sf::Font font;
 
     std::vector<sf::Sprite> weapon_slot_sprites;
     std::vector<sf::Sprite> item_slot_sprites;

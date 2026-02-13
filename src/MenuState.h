@@ -12,7 +12,7 @@
 
 class MenuState : public State {
 private:
-    sf::Font font;
+    // sf::Font font;
     std::unique_ptr<sf::Text> titleText;
     std::optional<sf::Sprite>
     backgroundSprite; // test de calmare warning pt sfml3
@@ -47,6 +47,8 @@ public:
     explicit MenuState(Game &gameRef);
 
     void handleInput() override;
+
+    void handleEvent(const sf::Event &event) override;
 
     void update(float dt) override;
 

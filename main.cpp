@@ -8,9 +8,8 @@
 int main() {
     try {
         Game game(1200, 800, "Zombie Survivors");
-
+        game.getResourceManager().loadFont("game_over", "fonts/game_over.ttf");
         game.pushState(std::make_unique<MenuState>(game));
-
         game.run();
 
         return 0;

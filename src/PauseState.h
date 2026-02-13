@@ -7,7 +7,7 @@
 
 class PauseState : public State {
 private:
-    sf::Font font;
+    // sf::Font font;
     std::unique_ptr<sf::Text> titleText;
     std::unique_ptr<sf::Text> continueText;
     std::unique_ptr<sf::Text> exitText;
@@ -28,6 +28,8 @@ public:
     explicit PauseState(Game &gameRef, State *underlyingState = nullptr);
 
     void handleInput() override;
+
+    void handleEvent(const sf::Event &event) override;
 
     void update(float dt) override;
 

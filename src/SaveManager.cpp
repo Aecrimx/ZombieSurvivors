@@ -1,4 +1,5 @@
 #include "SaveManager.h"
+#include "SaveDataException.h"
 #include <iostream>
 #include <json.hpp>
 #include <sys/stat.h>
@@ -47,8 +48,10 @@ void SaveManager::loadSave() {
                     s.value("flying_skull_kills", data.flyingSkullKills);
             data.totalWins = s.value("total_wins", data.totalWins);
         }
-    } catch (const std::exception &/*e*/) {
-        data = SaveData();
+    } catch (const json::exception &e) {
+        throw SaveDataException("Corrupted save file: " + std::string(e.what()));
+    } catch (const std::exception &e) {
+        throw SaveDataException("Save error: " + std::string(e.what()));
     }
 
     file.close();

@@ -66,12 +66,11 @@ void Game::run() {
                 width = static_cast<int>(resized->size.x);
                 height = static_cast<int>(resized->size.y);
 
-                states.top()->Resize(width, height);
-            } else if (event->is<sf::Event::KeyPressed>()) {
-                const auto *keyPressed = event->getIf<sf::Event::KeyPressed>();
-                if (keyPressed->scancode == sf::Keyboard::Scancode::Escape) {
-                    shouldExit = true;
-                } else if (keyPressed->scancode == sf::Keyboard::Scancode::F) {
+                if (!states.empty()) {
+                    states.top()->Resize(width, height);
+                }
+            } else if (const auto *keyPressed = event->getIf<sf::Event::KeyPressed>()) {
+                if (keyPressed->scancode == sf::Keyboard::Scancode::F) {
                     if (fullscreen_toggle == 0) {
                         fullscreen_toggle = 1;
                         window.create(sf::VideoMode::getDesktopMode(), title,
@@ -88,8 +87,14 @@ void Game::run() {
                     width = static_cast<int>(newSize.x);
                     height = static_cast<int>(newSize.y);
 
-                    states.top()->Resize(width, height);
+                    if (!states.empty()) {
+                        states.top()->Resize(width, height);
+                    }
                 }
+            }
+
+            if (!states.empty()) {
+                states.top()->handleEvent(*event);
             }
         }
 
