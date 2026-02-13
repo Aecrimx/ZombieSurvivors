@@ -33,7 +33,6 @@ GameOverState::GameOverState(Game &gameRef, const int score,
     }
     if (victory) {
         saveManager.incrementWins();
-        saveManager.checkUnlocks();
     }
 
     highScoreText = std::make_unique<sf::Text>(

@@ -124,6 +124,7 @@ add_executable(${MAIN_EXECUTABLE_NAME}
         src/SaveData.h
         src/SaveManager.cpp
         src/SaveManager.h
+        src/PlayerValidation.h
 )
 
 # NOTE: Add all defined targets (e.g. executables, libraries, etc. )

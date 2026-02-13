@@ -7,6 +7,7 @@
 
 class ResourceManager {
     std::map<std::string, sf::Texture> textures;
+    void ensureMissingTexture();
 
 public:
     ResourceManager();
@@ -17,7 +18,7 @@ public:
 
     bool hasTexture(const std::string &name) const;
 
-    void ensureMissingTexture();
+
 
     ~ResourceManager();
 

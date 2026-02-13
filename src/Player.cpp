@@ -108,9 +108,7 @@ void Player::update(float dt, const sf::RenderWindow &window,
         float len = std::sqrt(dir.x * dir.x + dir.y * dir.y);
         if (len > 0)
             velocity += (dir / len) * speed * dt;
-    } // TODO: Basically e bug e ca se stack-eaza vectorul de movement atunci cand
-    // apas WASD si LM, sa pastrez asta ca feature ca un fel de sprint? (im bad
-    // at balancing games)
+    }
 
     sprite.move(velocity);
 

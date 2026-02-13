@@ -317,7 +317,6 @@ void GameState::update(const float dt) {
 
             if (dynamic_cast<Flying_Skull *>(it->get())) {
                 saveManager.incrementFlyingSkullKills();
-                saveManager.checkUnlocks();
             }
 
             if (dynamic_cast<BigZombieBoss *>(it->get())) {

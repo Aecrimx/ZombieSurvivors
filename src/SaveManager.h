@@ -13,6 +13,7 @@ private:
     std::string saveFilePath;
 
     SaveManager();
+    void checkUnlocks();
 
 public:
     static SaveManager &getInstance() {
@@ -44,7 +45,7 @@ public:
 
     void incrementWins();
 
-    void checkUnlocks();
+
 };
 
 #endif // OOP_SAVEMANAGER_H

@@ -32,10 +32,6 @@ public:
 
     const std::string& getName() const;
 
-    // ui stuff
-    //const sf::Sprite *getIcon() const;
-
-    //void setIcon(const sf::Texture &texture);
 
     virtual Item *clone() const = 0;
 

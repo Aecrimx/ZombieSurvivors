@@ -10,4 +10,3 @@ void HealthPickup::onCollect(Player &player) {
     player.heal(maxHealth * healAmount);
 }
 
-// float HealthPickup::getHealAmount() const { return healAmount; }

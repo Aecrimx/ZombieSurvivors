@@ -15,7 +15,6 @@ public:
 
     void onCollect(Player &player) override;
 
-    //float getHealAmount() const;
 };
 
 #endif // OOP_HEALTHPICKUP_H
