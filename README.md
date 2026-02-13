@@ -197,9 +197,12 @@ Comanda este aceeași ca la pasul 1 sau 2. Nu merge combinat cu Valgrind.
 ```
 
 ## Resurse
+
+Libraries
 <!-- renovate: datasource=github-tags depName=SFML/SFML versioning=loose -->
 - [SFML](https://github.com/SFML/SFML/tree/3.0.2) (Zlib)
-- All assets have been made by me using [Paint.net](https://www.getpaint.net/) :D except:
-- [Spinning Skull Gif](https://tenor.com/view/skull-skullgif-gif-24419301) by Unknown (its a viral meme i can not find the original creator)
 - [json](https://github.com/nlohmann/json) by [nlohmann](https://github.com/nlohmann)
+
+All assets have been made by me using [Paint.net](https://www.getpaint.net/) :D except:
+- [Spinning Skull Gif](https://tenor.com/view/skull-skullgif-gif-24419301) by Unknown (its a viral meme i can not find the original creator)
 - [Backgound Castle Image](https://ro.wikipedia.org/wiki/Fi%C8%99ier:01_Chateau_Peles.jpg) by Wikipedia User [Myrabella](https://commons.wikimedia.org/wiki/User:Myrabella)

@@ -102,7 +102,7 @@ std::vector<UpgradeData> UpgradeManagerFactory::getItemLevelUpOptions(const Play
             options.push_back({
                 itemName + " Level Up",
                 "Upgrade " + itemName + " to Level " + std::to_string(nextLevel),
-                [itemName](Player& p) {
+                [itemName](const Player& p) {
                     for (auto& i : p.getItems()) {
                         if (i->getName() == itemName && i->canLevelUp()) {
                             i->levelUp();
@@ -125,7 +125,7 @@ std::vector<UpgradeData> UpgradeManagerFactory::getWeaponLevelUpOptions(const Pl
             options.push_back({
                 weaponName + " Level Up",
                 "Upgrade " + weaponName + " to Level " + std::to_string(nextLevel),
-                [weaponName](Player& p) {
+                [weaponName](const Player& p) {
                     for (auto& w : p.getWeapons()) {
                         if (w->getName() == weaponName && w->canLevelUp()) {
                             w->levelUp();
