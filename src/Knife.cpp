@@ -7,6 +7,11 @@ Knife::Knife(ResourceManager &res, Player *playerPtr)
 
 Weapon *Knife::clone() const { return new Knife(*this); }
 
+void Knife::setOwner(Player &p) { player = &p; }
+/*
+ * Singurul motiv pt care am aceasta metoda extra este pentru a avea acces la metoda isFacingRight din player
+ */
+
 void Knife::update(float dt, sf::Vector2f playerPos,
                    const std::vector<std::unique_ptr<Enemy> > & /*enemies*/,
                    std::vector<Projectile> &projectiles) {

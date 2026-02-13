@@ -1,6 +1,15 @@
 #include "Game.h"
 #include "State.h"
-#include <iostream>
+
+#include "Armor.h"
+#include "Boots.h"
+#include "CooldownGauntlet.h"
+#include "DemonicBook.h"
+#include "FireWand.h"
+#include "HeartCrystal.h"
+#include "Knife.h"
+#include "MagicGun.h"
+#include "SoulLantern.h"
 
 sf::View Game::LetterboxView(sf::View view, const int winWidth, const int winHeight) {
     const float windowRatio = winWidth / static_cast<float>(winHeight);
@@ -34,6 +43,19 @@ Game::Game(const int width, const int height, const std::string &title)
                   }),
                   title, sf::Style::Default);
     window.setVerticalSyncEnabled(true);
+
+    //Iteme
+    upgradeManagerFactory.registerItem(std::make_unique<Armor>(), "+10% Damage Reduction");
+    upgradeManagerFactory.registerItem(std::make_unique<Boots>(), "+10% Movement Speed");
+    upgradeManagerFactory.registerItem(std::make_unique<CooldownGauntlet>(), "+16.67% Cooldown Reduction");
+    upgradeManagerFactory.registerItem(std::make_unique<HeartCrystal>(), "+10 Max HP, +0.5 HP/sec Regen");
+
+    //Arme
+    upgradeManagerFactory.registerWeapon(std::make_unique<MagicGun>(resourceManager), "Shoots lasers in a clock-wise pattern.");
+    upgradeManagerFactory.registerWeapon(std::make_unique<SoulLantern>(resourceManager), "Shoots a soul scream to the left and right.");
+    upgradeManagerFactory.registerWeapon(std::make_unique<FireWand>(resourceManager), "Shoots fireballs towards enemies.");
+    upgradeManagerFactory.registerWeapon(std::make_unique<DemonicBook>(resourceManager), "Damaging aura that periodically damages enemies.");
+    upgradeManagerFactory.registerWeapon(std::make_unique<Knife>(resourceManager, nullptr), "Throws a knife in the direction you're facing.");
 }
 
 void Game::pushState(std::unique_ptr<State> state) {

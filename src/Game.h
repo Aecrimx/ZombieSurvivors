@@ -6,6 +6,7 @@
 #define OOP_GAME_H
 
 #include "ResourceManager.h"
+#include "UpgradeManagerFactory.h"
 #include <SFML/Graphics.hpp>
 #include <memory>
 #include <ostream>
@@ -32,6 +33,8 @@ class Game {
     bool hasPendingReplace = false;
     int pendingPops = 0;
 
+    UpgradeManagerFactory upgradeManagerFactory;
+
 public:
     Game(int width, int height, const std::string &title);
 
@@ -50,6 +53,8 @@ public:
     static sf::View LetterboxView(sf::View view, int winWidth, int winHeight);
 
     sf::Vector2f getWindowSize() const;
+
+    UpgradeManagerFactory& getUpgradeManagerFactory() { return upgradeManagerFactory; }
 
     friend std::ostream &operator<<(std::ostream &os, const Game &obj) {
         return os << "[Game]"

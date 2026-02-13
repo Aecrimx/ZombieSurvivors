@@ -60,7 +60,8 @@ void Player::addWeapon(std::unique_ptr<Weapon> weapon) {
             return;
         }
     }
-    // else adauga
+    // else adauga + setOwner
+    weapon->setOwner(*this);
     weapons.push_back(std::move(weapon));
 }
 

@@ -1,15 +1,5 @@
 #include "LevelUpState.h"
-#include "Armor.h"
-#include "Boots.h"
-#include "CooldownGauntlet.h"
-#include "DemonicBook.h"
-#include "FireWand.h"
 #include "Game.h"
-#include "HeartCrystal.h"
-#include "Knife.h"
-#include "MagicGun.h"
-#include "ResourceLoadException.h"
-#include "SoulLantern.h"
 #include <algorithm>
 #include <random>
 
@@ -33,177 +23,9 @@ LevelUpState::LevelUpState(Game &gameRef, Player *playerRef,
 void LevelUpState::generateOptions() {
     options.clear();
 
-    struct PossibleUpgrade {
-        std::string name;
-        std::string desc;
-        std::function<void(Player &)> apply;
-        bool available;
-    };
+    if (!player) return;
 
-    std::vector<PossibleUpgrade> allUpgrades;
-
-    const auto &items = player->getItems();
-    bool hasArmor = false, hasBoots = false, hasCooldown = false,
-            hasHeart = false;
-
-    for (const auto &item: items) {
-        if (item->getName() == "Armor")
-            hasArmor = true;
-        if (item->getName() == "Boots")
-            hasBoots = true;
-        if (item->getName() == "Cooldown Gauntlet")
-            hasCooldown = true;
-        if (item->getName() == "Heart Crystal")
-            hasHeart = true;
-    }
-
-    if (!hasArmor && items.size() < 3) {
-        allUpgrades.push_back(
-            {
-                "Armor", "+10% Damage Reduction",
-                [](Player &p) { p.addItem(std::make_unique<Armor>()); }, true
-            });
-    }
-    if (!hasBoots && items.size() < 3) {
-        allUpgrades.push_back(
-            {
-                "Boots", "+10% Movement Speed",
-                [](Player &p) { p.addItem(std::make_unique<Boots>()); }, true
-            });
-    }
-    if (!hasCooldown && items.size() < 3) {
-        allUpgrades.push_back(
-            {
-                "Cooldown Gauntlet", "+16.67% Cooldown Reduction",
-                [](Player &p) { p.addItem(std::make_unique<CooldownGauntlet>()); },
-                true
-            });
-    }
-    if (!hasHeart && items.size() < 3) {
-        allUpgrades.push_back(
-            {
-                "Heart Crystal", "+10 Max HP, +0.5 HP/sec Regen",
-                [](Player &p) { p.addItem(std::make_unique<HeartCrystal>()); }, true
-            });
-    }
-
-    for (const std::unique_ptr<Item> &item:
-         items) {
-        // chiar daca auto deduce corect cppcheck tot cere const????
-        // declarare explicita atunci
-        if (item->canLevelUp()) {
-            std::string itemName = item->getName();
-            allUpgrades.push_back({
-                itemName + " Level Up",
-                "Upgrade " + itemName + " to Level " +
-                std::to_string(item->getLevel() + 1),
-                [itemName](const Player &p) {
-                    for (auto &i: p.getItems()) {
-                        if (i->getName() == itemName &&
-                            i->canLevelUp()) {
-                            i->levelUp();
-                            break;
-                        }
-                    }
-                },
-                true
-            });
-        }
-    }
-
-    const auto &weapons = player->getWeapons();
-    if (weapons.size() < 3) {
-        bool hasMagicGun = false, hasSoulLantern = false, hasFireWand = false,
-                hasDemonicBook = false, hasKnife = false;
-        for (const auto &weapon: weapons) {
-            if (weapon->getName() == "Magic Gun")
-                hasMagicGun = true;
-            if (weapon->getName() == "Soul Lantern")
-                hasSoulLantern = true;
-            if (weapon->getName() == "Fire wand")
-                hasFireWand = true;
-            if (weapon->getName() == "Demonic Book")
-                hasDemonicBook = true;
-            if (weapon->getName() == "Knife")
-                hasKnife = true;
-        }
-
-        if (!hasMagicGun) {
-            allUpgrades.push_back(
-                {
-                    "Magic Gun", "Shoots lasers in a clock-wise pattern.",
-                    [this](Player &p) {
-                        p.addWeapon(std::make_unique<MagicGun>(game.getResourceManager()));
-                    },
-                    true
-                });
-        }
-        if (!hasSoulLantern) {
-            allUpgrades.push_back(
-                {
-                    "Soul Lantern", "Shoots a soul scream in a direction.",
-                    [this](Player &p) {
-                        p.addWeapon(
-                            std::make_unique<SoulLantern>(game.getResourceManager()));
-                    },
-                    true
-                });
-        }
-        if (!hasFireWand) {
-            allUpgrades.push_back(
-                {
-                    "Fire wand", "Shoots fireballs towards enemies.",
-                    [this](Player &p) {
-                        p.addWeapon(std::make_unique<FireWand>(game.getResourceManager()));
-                    },
-                    true
-                });
-        }
-        if (!hasDemonicBook) {
-            allUpgrades.push_back(
-                {
-                    "Demonic Book", "Damaging aura that periodically damages enemies.",
-                    [this](Player &p) {
-                        p.addWeapon(
-                            std::make_unique<DemonicBook>(game.getResourceManager()));
-                    },
-                    true
-                });
-        }
-        if (!hasKnife) {
-            allUpgrades.push_back(
-                {
-                    "Knife", "Throws a knife in the direction you're facing.",
-                    [this](Player &p) {
-                        p.addWeapon(
-                            std::make_unique<Knife>(game.getResourceManager(), &p));
-                    },
-                    true
-                });
-        }
-    }
-
-    allUpgrades.push_back({
-        "Max HP Up", "+20 Maximum Health",
-        [](Player &p) { p.increaseMaxHealth(20.f); }, true
-    });
-    allUpgrades.push_back(
-        {
-            "Health Regen", "+1.0 HP/sec Regeneration",
-            [](Player &p) { p.setHealthRegen(p.getHealthRegen() + 1.0f); }, true
-        });
-    allUpgrades.push_back({
-        "Speed Up", "+15% Movement Speed",
-        [](Player &p) { p.increaseSpeed(1.15f); }, true
-    });
-
-    // filtrare available items
-    std::vector<PossibleUpgrade> available;
-    for (const auto &upgrade: allUpgrades) {
-        if (upgrade.available) {
-            available.push_back(upgrade);
-        }
-    }
+    auto availableUpgradeData = game.getUpgradeManagerFactory().getUpgradeOptions(*player);
 
     /*
      * Am folosit un random generator din std in loc de un clasic rand().
@@ -212,14 +34,14 @@ void LevelUpState::generateOptions() {
      */
     std::random_device rd;
     std::mt19937 gen(rd());
-    std::shuffle(available.begin(), available.end(), gen);
+    std::shuffle(availableUpgradeData.begin(), availableUpgradeData.end(), gen);
 
-    const int numOptions = std::min(3, static_cast<int>(available.size()));
+    const int numOptions = std::min(3, static_cast<int>(availableUpgradeData.size()));
     for (int i = 0; i < numOptions; ++i) {
         UpgradeOption opt;
-        opt.name = available[i].name;
-        opt.description = available[i].desc;
-        opt.applyUpgrade = available[i].apply;
+        opt.name = availableUpgradeData[i].name;
+        opt.description = availableUpgradeData[i].description;
+        opt.applyUpgrade = availableUpgradeData[i].apply;
         opt.hovered = false;
 
         const auto& font = game.getResourceManager().getFont("game_over");

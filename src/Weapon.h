@@ -8,6 +8,8 @@
 #include <memory>
 #include <vector>
 
+class Player;
+
 class Weapon {
 protected:
     std::string name;
@@ -40,6 +42,8 @@ public:
     bool canLevelUp() const;
     int getLevel() const;
     float getDamage() const;
+
+    virtual void setOwner(Player &/*p*/) {} // metoda care e folosita doar pt arme care ar avea nevoie de cv informatie din Player
 
     friend std::ostream &operator<<(std::ostream &os, const Weapon &obj);
 

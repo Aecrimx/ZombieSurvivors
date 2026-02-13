@@ -1,0 +1,9 @@
+#ifndef OOP_ENEMYWAVEFACTORY_H
+#define OOP_ENEMYWAVEFACTORY_H
+
+
+class EnemyWaveFactory {
+};
+
+
+#endif //OOP_ENEMYWAVEFACTORY_H

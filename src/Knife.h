@@ -14,6 +14,8 @@ public:
 
     Weapon *clone() const override;
 
+    void setOwner(Player &p) override;
+
     void update(float dt, sf::Vector2f playerPos,
                 const std::vector<std::unique_ptr<Enemy> > &enemies,
                 std::vector<Projectile> &projectiles) override;

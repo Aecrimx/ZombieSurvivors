@@ -124,7 +124,11 @@ add_executable(${MAIN_EXECUTABLE_NAME}
         src/SaveData.h
         src/SaveManager.cpp
         src/SaveManager.h
+        src/UpgradeManagerFactory.cpp
+        src/UpgradeManagerFactory.h
         src/PlayerValidation.h
+        src/EnemyWaveFactory.cpp
+        src/EnemyWaveFactory.h
 )
 
 # NOTE: Add all defined targets (e.g. executables, libraries, etc. )
