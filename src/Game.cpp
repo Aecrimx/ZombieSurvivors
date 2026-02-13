@@ -66,9 +66,8 @@ void Game::run() {
                 width = static_cast<int>(resized->size.x);
                 height = static_cast<int>(resized->size.y);
 
-                if (!states.empty()) {
-                    states.top()->Resize(width, height);
-                }
+                states.top()->Resize(width, height);
+
             } else if (const auto *keyPressed = event->getIf<sf::Event::KeyPressed>()) {
                 if (keyPressed->scancode == sf::Keyboard::Scancode::F) {
                     if (fullscreen_toggle == 0) {
@@ -93,9 +92,7 @@ void Game::run() {
                 }
             }
 
-            if (!states.empty()) {
-                states.top()->handleEvent(*event);
-            }
+            states.top()->handleEvent(*event);
         }
 
         states.top()->handleInput();

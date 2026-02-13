@@ -56,7 +56,7 @@ GameState::GameState(Game &ref) : State(ref) {
 
 GameState::GameState(Game &gameRef, const CharacterData &charData)
     : State(gameRef), gameTimer(0.f), characterName(charData.name),
-      bossSpawned(false), contactDamageCooldown(0.f), escWasPressed(false) {
+      bossSpawned(false), contactDamageCooldown(0.f) {
     ResourceManager &res = game.getResourceManager();
 
     res.loadTexture("fire_wand", "assets/fire_wand.png");

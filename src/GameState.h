@@ -32,7 +32,7 @@ class GameState : public State {
     bool bossSpawned{false};
 
     float contactDamageCooldown{0.f};
-    bool escWasPressed{false};
+
 
 public:
     explicit GameState(Game &game);
