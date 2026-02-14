@@ -4,12 +4,12 @@
 #include "GameException.h"
 #include <string>
 
-class InvalidStateException : public GameException {
+class PlayerException : public GameException {
 public:
-    explicit InvalidStateException(const std::string &msg)
+    explicit PlayerException(const std::string &msg)
         : GameException("Invalid State: " + msg) {
     }
-    //virtual ~InvalidStateException() = default;
+    //virtual ~PlayerException() = default;
 };
 
 #endif // OOP_INVALIDSTATEEXCEPTION_H

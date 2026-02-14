@@ -123,6 +123,10 @@ public:
 
     bool isFacingRight() const;
 
+    void setPos(sf::Vector2f pos);
+
+    void validateState() const;
+
     friend std::ostream &operator<<(std::ostream &os, const Player &obj);
 
     // float getHealthPoints() const;

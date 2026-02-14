@@ -4,12 +4,14 @@
 #include "DemonicBook.h"
 #include "FireWand.h"
 #include "Item.h"
+#include "PlayerException.h"
+#include "PlayerValidation.h"
 #include <iostream>
 
 Player::Player(const CharacterData &data, ResourceManager &resources)
     : sprite(resources.getTexture(data.texture_name)), speed(data.moveSpeed),
       baseSpeed(data.moveSpeed), maxHealth(data.maxHealth),
-      currentHealth(data.maxHealth), healthRegen(0.f), level(1), currentXP(0.f),
+      currentHealth(data.maxHealth), healthRegen(0.f), level(1), currentXP(0.f), // level(101) arunca exceptie
       xpToNextLevel(50.f), facingRight(true), damageReduction(0.f),
       cooldownMultiplier(1.f) {
     // pt flying skull
@@ -116,6 +118,7 @@ void Player::update(float dt, const sf::RenderWindow &window,
     for (auto &w: weapons) {
         w->update(dt, getPos(), enemies, projectiles);
     }
+    validateState();
 }
 
 void Player::draw(sf::RenderWindow &window) const {
@@ -287,11 +290,29 @@ void Player::levelUp() {
     }
 
     std::cout << "==============================\n" << std::endl;
+    validateState();
 }
 
 void Player::heal(float amount) {
     currentHealth += amount;
     if (currentHealth > maxHealth) {
         currentHealth = maxHealth;
+    }
+}
+
+void Player::setPos(sf::Vector2f pos) { sprite.setPosition(pos); }
+
+void Player::validateState() const {
+    if (level > PlayerValidation::MAX_LEVEL) {
+        throw PlayerException("Level exceeds limit");
+    }
+    if (maxHealth > PlayerValidation::MAX_HEALTH) {
+        throw PlayerException("Max Health exceeds limit");
+    }
+    if (currentXP > PlayerValidation::MAX_XP) {
+        throw PlayerException("XP exceeds limit");
+    }
+    if (currentXP < PlayerValidation::MIN_XP) {
+        throw PlayerException("XP is negative");
     }
 }

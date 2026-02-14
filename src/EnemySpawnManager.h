@@ -1,6 +1,7 @@
 #ifndef ENEMY_SPAWN_MANAGER_H
 #define ENEMY_SPAWN_MANAGER_H
 
+#include "SingletonTemplate.h"
 #include <random>
 #include <vector>
 
@@ -20,16 +21,19 @@ struct SpawnRule {
     float endTime; // -1.0f pt infinit
 };
 
-class EnemySpawnManager {
+class EnemySpawnManager : public Singleton<EnemySpawnManager> {
 public:
-    EnemySpawnManager();
-
     void addRule(EnemyType type, int weight, float startTime,
                  float endTime = -1.0f);
 
     EnemyType pickEnemy(float currentTime);
 
     static bool shouldSpawnBoss(float currentTime);
+
+    void reset();
+
+protected:
+    EnemySpawnManager();
 
 private:
     std::vector<SpawnRule> rules;

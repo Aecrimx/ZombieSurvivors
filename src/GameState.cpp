@@ -9,6 +9,7 @@
 #include <iostream>
 
 #include "Flying_Skull.h"
+#include "PlayerException.h"
 
 GameState::GameState(Game &gameRef, const CharacterData &charData)
     : State(gameRef), gameTimer(0.f), characterName(charData.name),
@@ -46,24 +47,24 @@ GameState::GameState(Game &gameRef, const CharacterData &charData)
 
     enemyFactory = std::make_unique<EnemyFactory>(res, *player, projectiles);
 
-    //Wave 1 : 0 - 3 min bats si zombies 50/50
-    enemySpawnManager.addRule(EnemyType::Bat, 1, 0.f, 180.f);
-    enemySpawnManager.addRule(EnemyType::Zombie, 1, 0.f, 180.f);
+    EnemySpawnManager::getInstance().reset();
 
-    //Wave 2 : 3 - 7 min Doar zombies
-    enemySpawnManager.addRule(EnemyType::Zombie, 1, 180.f, 420.f);
+    // Wave 1 : 0 - 3 min bats si zombies 50/50
+    EnemySpawnManager::getInstance().addRule(EnemyType::Bat, 1, 0.f, 180.f);
+    EnemySpawnManager::getInstance().addRule(EnemyType::Zombie, 1, 0.f, 180.f);
 
-    //Wave 3 : 7 - 10 min Zombies + Knight Zmbies + 1/0 sa fie flying skull
-    enemySpawnManager.addRule(EnemyType::FlyingSkull, 1, 420.f, 600.f);
-    enemySpawnManager.addRule(EnemyType::KnightZombie, 4, 420.f, 600.f);
-    enemySpawnManager.addRule(EnemyType::Zombie, 5, 420.f, 600.f);
+    // Wave 2 : 3 - 7 min Doar zombies
+    EnemySpawnManager::getInstance().addRule(EnemyType::Zombie, 1, 180.f, 420.f);
 
-    //Wave 10 - 15 min Flying Skull Knight Zombies
-    enemySpawnManager.addRule(EnemyType::FlyingSkull, 1, 600.f);
-    enemySpawnManager.addRule(EnemyType::KnightZombie, 2, 600.f);
-    //enemySpawnManager.addRule(EnemyType::Zombie, 1, 600.f);
+    // Wave 3 : 7 - 10 min Zombies + Knight Zmbies + 1/0 sa fie flying skull
+    EnemySpawnManager::getInstance().addRule(EnemyType::FlyingSkull, 1, 420.f, 600.f);
+    EnemySpawnManager::getInstance().addRule(EnemyType::KnightZombie, 4, 420.f, 600.f);
+    EnemySpawnManager::getInstance().addRule(EnemyType::Zombie, 5, 420.f, 600.f);
 
-
+    // Wave 10 - 15 min Flying Skull Knight Zombies
+    EnemySpawnManager::getInstance().addRule(EnemyType::FlyingSkull, 1, 600.f);
+    EnemySpawnManager::getInstance().addRule(EnemyType::KnightZombie, 2, 600.f);
+    // EnemySpawnManager::getInstance().addRule(EnemyType::Zombie, 1, 600.f);
 
     background = std::make_unique<sf::Sprite>(
         game.getResourceManager().getTexture("background"));
@@ -131,7 +132,7 @@ void GameState::update(const float dt) {
         return;
     }
 
-    if (!bossSpawned && enemySpawnManager.shouldSpawnBoss(gameTimer)) {
+    if (!bossSpawned && EnemySpawnManager::shouldSpawnBoss(gameTimer)) {
         bossSpawned = true;
         const float angle = (rand() % 360) * 3.14f / 180.f;
         const float dist = 500.f;
@@ -156,7 +157,7 @@ void GameState::update(const float dt) {
                 player->getPos() +
                 sf::Vector2f(std::cos(angle) * dist, std::sin(angle) * dist);
 
-        EnemyType type = enemySpawnManager.pickEnemy(gameTimer);
+        EnemyType type = EnemySpawnManager::getInstance().pickEnemy(gameTimer);
         if (type != EnemyType::None) {
             auto enemy = enemyFactory->createEnemy(type, spawnPos);
             if (enemy) {
@@ -166,6 +167,19 @@ void GameState::update(const float dt) {
     }
 
     player->update(dt, game.getWindow(), enemies, projectiles);
+
+    //Map Border
+    sf::Vector2f pos = player->getPos();
+    float clampedX = std::max(0.f, std::min(pos.x, 10000.f));
+    float clampedY = std::max(0.f, std::min(pos.y, 10000.f));
+    player->setPos({clampedX, clampedY});
+
+    //Validare coords
+    if (player->getPos().x < 0 || player->getPos().x > 10000 ||
+        player->getPos().y < 0 || player->getPos().y > 10000) {
+        throw PlayerException("Player coordinates outside world limits.");
+    }
+
     view.setCenter(player->getPos());
 
     for (const auto &enemy: enemies) {

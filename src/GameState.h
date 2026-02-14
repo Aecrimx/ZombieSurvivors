@@ -34,14 +34,11 @@ class GameState : public State {
     std::string characterName;
     bool bossSpawned{false};
 
-    EnemySpawnManager enemySpawnManager;
     std::unique_ptr<EnemyFactory> enemyFactory;
 
     float contactDamageCooldown{0.f};
 
 public:
-    explicit GameState(Game &game);
-
     GameState(Game &game, const CharacterData &charData);
 
     void handleInput() override;

@@ -1,5 +1,5 @@
 #include "src/Game.h"
-#include "src/InvalidStateException.h"
+#include "src/PlayerException.h"
 #include "src/MenuState.h"
 #include "src/ResourceLoadException.h"
 #include "src/SaveDataException.h"
@@ -19,8 +19,8 @@ int main() {
     } catch (const SaveDataException &e) {
         std::cerr << "Save Data Error: " << e.what() << std::endl;
         //return 2; // acum SaveManager incearca sa repare fisierul malformat/corupt
-    } catch (const InvalidStateException &e) {
-        std::cerr << "Game State Error: " << e.what() << std::endl;
+    } catch (const PlayerException &e) {
+        std::cerr << "Player Error: " << e.what() << std::endl;
         return 3;
     } catch (const std::exception &e) {
         std::cerr << "Unexpected Error: " << e.what() << std::endl;
