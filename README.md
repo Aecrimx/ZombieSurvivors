@@ -1,3 +1,5 @@
+# Zombie Survivors
+
 ### Description
 
 The classic experience of Vampire Survivors remade in a SFML uni project. Survive hoards of enemies that scale as time goes by leveling and unlocking items. As time passes the enemies will get stronger and stronger and you must keep up the pace. Items can synergise to create stronger versions of themselves. You don't have to worry about aiming since all weapons autofire.
