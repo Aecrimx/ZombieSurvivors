@@ -2,7 +2,7 @@
 
 ### Description
 
-The classic experience of Vampire Survivors remade in a SFML uni project. Survive hoards of enemies that scale as time goes by leveling and unlocking items. As time passes the enemies will get stronger and stronger and you must keep up the pace. Items can synergise to create stronger versions of themselves. You don't have to worry about aiming since all weapons autofire.
+The classic experience of Vampire Survivors remade in a SFML uni project. Survive hoards of enemies that scale as time goes by leveling and unlocking items. As time passes the enemies will get stronger and stronger and you must keep up the pace. You don't have to worry about aiming since all weapons autofire. Survive 15 minutes and beat the final boss to win the game.
 
 ### Controls
 - W,A,S,D to move
@@ -10,7 +10,7 @@ The classic experience of Vampire Survivors remade in a SFML uni project. Surviv
 - F to enter or exit fullscreen mode
 - ESC key to exit the game
 
-### Planned features:
+### Implemented features:
 - [x] Three selectable characters to play, each with their own starting weapon and stats
 - [x] Main Menu, pause, death screen and game state
 - [x] At least an inventory space for 3 weapons and 3 items
@@ -28,14 +28,17 @@ The classic experience of Vampire Survivors remade in a SFML uni project. Surviv
 1. **Hocus**
 ![Hocus](assets/wizard.png)
 * Graduating from the wizarding school of Evermore with high honors and earning a PhD in Applied Fireball Sciences, Hocus has focused on demonstrating his degree on the battlefield. His current research is on the topic of curing Zombification by fire.
+* Avalaible as the first playable character. Starts with a Fire Wand.
 
 2. **Azoth**
    ![Azoth](assets/demon.png)
 * Nobody knows who Azoth was before his demonic ascension, but his rather old fashion style gives away the century he was born in. Hates zombies because they do not submit to his will.
+* Unlocked by winning the game once. Starts with a Demonic Book.
 
 3. **Badass flying skull**
    ![Skull](assets/spinning-skull.gif)
 * A mysterious cool skull that has turned against its brothers.
+* Unlocked by killing 5 flying skulls. Starts with a secret weapon.
 
 
 
