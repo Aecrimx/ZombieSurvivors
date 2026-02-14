@@ -15,10 +15,10 @@ int main() {
         return 0;
     } catch (const ResourceLoadException &e) {
         std::cerr << "Resource Error: " << e.what() << std::endl;
-        return 1;
+        //return 1;
     } catch (const SaveDataException &e) {
         std::cerr << "Save Data Error: " << e.what() << std::endl;
-        return 2;
+        //return 2; // acum SaveManager incearca sa repare fisierul malformat/corupt
     } catch (const InvalidStateException &e) {
         std::cerr << "Game State Error: " << e.what() << std::endl;
         return 3;

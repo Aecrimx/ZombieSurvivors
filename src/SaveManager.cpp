@@ -49,9 +49,15 @@ void SaveManager::loadSave() {
             data.totalWins = s.value("total_wins", data.totalWins);
         }
     } catch (const json::exception &e) {
-        throw SaveDataException("Corrupted save file: " + std::string(e.what()));
+        data = SaveData();
+        saveSave();
+        throw SaveDataException("Corrupted save file: " + std::string(e.what()) +
+            "\n Repairing with default save file.");
     } catch (const std::exception &e) {
-        throw SaveDataException("Save error: " + std::string(e.what()));
+        data = SaveData();
+        saveSave();
+        throw SaveDataException("Save error: " + std::string(e.what())+
+            "\n Repairing with default save file.");
     }
 
     file.close();
