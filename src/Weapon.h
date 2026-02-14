@@ -16,8 +16,8 @@ protected:
     float cooldown;
     float timer;
     ResourceManager &resources;
-    int level; // (1-3)
-    float damage; //current damage
+    int level;        // (1-3)
+    float damage;     // current damage
     float baseDamage; // de la lvl 1
 
 public:

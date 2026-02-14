@@ -30,7 +30,8 @@ void ResourceManager::loadTexture(const std::string &name,
     }
 }
 
-void ResourceManager::loadTextureInternal(const std::string &name, const std::string &path) {
+void ResourceManager::loadTextureInternal(const std::string &name,
+                                          const std::string &path) {
     ensureMissingTexture();
 
     sf::Texture texture;
@@ -71,7 +72,8 @@ std::ostream &operator<<(std::ostream &os, const ResourceManager &rm) {
     return os;
 }
 
-void ResourceManager::loadFont(const std::string &name, const std::string &path) {
+void ResourceManager::loadFont(const std::string &name,
+                               const std::string &path) {
     sf::Font font;
     if (!font.openFromFile(path)) {
         throw ResourceLoadException(path);

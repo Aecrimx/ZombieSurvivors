@@ -7,23 +7,19 @@
 /*
  * pt tema 3 singleton
  */
-class SaveManager {
+#include "SingletonTemplate.h"
+
+class SaveManager : public Singleton<SaveManager> {
 private:
     SaveData data;
     std::string saveFilePath;
 
-    SaveManager();
     void checkUnlocks();
 
+protected:
+     SaveManager();
+
 public:
-    static SaveManager &getInstance() {
-        static SaveManager instance;
-        return instance;
-    }
-
-    SaveManager(const SaveManager &) = delete;
-
-    SaveManager &operator=(const SaveManager &) = delete;
 
     void loadSave();
 

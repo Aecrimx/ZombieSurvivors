@@ -35,8 +35,8 @@ sf::Vector2f Game::getWindowSize() const {
 }
 
 Game::Game(const int width, const int height, const std::string &title)
-    : title(title), width(static_cast<unsigned int>(width)), height(static_cast<unsigned int>(height)),
-      fullscreen_toggle(0) {
+    : title(title), width(static_cast<unsigned int>(width)),
+      height(static_cast<unsigned int>(height)), fullscreen_toggle(0) {
     window.create(sf::VideoMode({
                       static_cast<unsigned int>(width),
                       static_cast<unsigned int>(height)
@@ -89,7 +89,6 @@ void Game::run() {
                 height = static_cast<int>(resized->size.y);
 
                 states.top()->Resize(width, height);
-
             } else if (const auto *keyPressed = event->getIf<sf::Event::KeyPressed>()) {
                 if (keyPressed->scancode == sf::Keyboard::Scancode::F) {
                     if (fullscreen_toggle == 0) {
@@ -99,9 +98,11 @@ void Game::run() {
                         window.setVerticalSyncEnabled(true);
                     } else {
                         fullscreen_toggle = 0;
-                        window.create(
-                            sf::VideoMode({static_cast<unsigned int>(width), static_cast<unsigned int>(height)}),
-                            title, sf::Style::Default);
+                        window.create(sf::VideoMode({
+                                          static_cast<unsigned int>(width),
+                                          static_cast<unsigned int>(height)
+                                      }),
+                                      title, sf::Style::Default);
                         window.setVerticalSyncEnabled(true);
                     }
                     const auto newSize = window.getSize();

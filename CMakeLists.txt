@@ -129,6 +129,7 @@ add_executable(${MAIN_EXECUTABLE_NAME}
         src/PlayerValidation.h
         src/EnemyWaveFactory.cpp
         src/EnemyWaveFactory.h
+        src/SingletonTemplate.h
 )
 
 # NOTE: Add all defined targets (e.g. executables, libraries, etc. )
