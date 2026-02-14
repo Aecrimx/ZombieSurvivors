@@ -1,10 +1,7 @@
 #include "EnemySpawnManager.h"
 #include <iostream>
 
-EnemySpawnManager::EnemySpawnManager() {
-    std::random_device rd;
-    rng = std::mt19937(rd());
-}
+EnemySpawnManager::EnemySpawnManager() : rng(std::random_device{}()) {}
 
 void EnemySpawnManager::addRule(const EnemyType type, const int weight, const float startTime, const float endTime) {
     rules.push_back({type, weight, startTime, endTime});
