@@ -1,7 +1,7 @@
 #include "BoneShooter.h"
 
 BoneShooter::BoneShooter(ResourceManager &res)
-    : Weapon("Bone Shooter", 2.0f, res, 35.f) {
+    : Weapon("Bone Shooter", 2.0f, res, 20.f) {
 }
 
 Weapon *BoneShooter::clone() const { return new BoneShooter(*this); }

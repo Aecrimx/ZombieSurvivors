@@ -1,58 +1,14 @@
 #include "GameState.h"
-#include "Bat.h"
 #include "BigZombieBoss.h"
 #include "Game.h"
 #include "GameOverState.h"
-#include "KnightZombie.h"
 #include "LevelUpState.h"
 #include "PauseState.h"
 #include "SaveManager.h"
-#include "Zombie.h"
 #include <cmath>
 #include <iostream>
 
 #include "Flying_Skull.h"
-
-GameState::GameState(Game &ref) : State(ref) {
-    // this is kinda deprecated code
-    ResourceManager &res = game.getResourceManager();
-
-    res.loadTexture("fire_wand", "assets/fire_wand.png");
-    res.loadTexture("zombie", "assets/zombie.png");
-    res.loadTexture("fireball", "assets/fireball.png");
-    res.loadTexture("wizard", "assets/wizard.png");
-    res.loadTexture("spinning_skull", "assets/spinning_skull_sheet.png");
-    res.loadTexture("slot", "assets/inventory_slot.png");
-    res.loadTexture("demon", "assets/demon.png");
-    res.loadTexture("damage_aura", "assets/damage_aura_demonic_book64x64.png");
-    res.loadTexture("demonic_book", "assets/demonic_book32x32.png");
-    res.loadTexture("laser_projectile", "assets/laser_projectile512x16.png");
-    res.loadTexture("skull", "assets/skull_projectile.png");
-    res.loadTexture("knife", "assets/knife128x128.png");
-    res.loadTexture("knife_projectile", "assets/knife_projectile32x16.png");
-    res.loadTexture("background", "assets/grass.png");
-    res.getTexture("background").setRepeated(true);
-
-    CharacterData Azoth = CharacterData("Azoth", "demon", 150.f, 100.f,
-                                        "Demonic Book", "demonic_book");
-
-    player = std::make_unique<Player>(Azoth, res);
-    characterName = "demon";
-
-    background = std::make_unique<sf::Sprite>(
-        game.getResourceManager().getTexture("background"));
-    background->setTextureRect(sf::IntRect({0, 0}, {10000, 10000}));
-    view.setSize({game.getWindowSize().x, game.getWindowSize().y});
-    view.setCenter(player->getPos());
-
-    sf::Vector2f winSize = game.getWindowSize();
-    GameState::Resize((int) winSize.x, (int) winSize.y);
-
-    sf::Vector2u size = game.getWindow().getSize();
-    hud = std::make_unique<HUD>(res, size.x, size.y);
-
-    GameState::Resize(static_cast<int>(size.x), static_cast<int>(size.y));
-}
 
 GameState::GameState(Game &gameRef, const CharacterData &charData)
     : State(gameRef), gameTimer(0.f), characterName(charData.name),
@@ -87,6 +43,27 @@ GameState::GameState(Game &gameRef, const CharacterData &charData)
 
     player = std::make_unique<Player>(charData, res);
     characterName = charData.texture_name;
+
+    enemyFactory = std::make_unique<EnemyFactory>(res, *player, projectiles);
+
+    //Wave 1 : 0 - 3 min bats si zombies 50/50
+    enemySpawnManager.addRule(EnemyType::Bat, 1, 0.f, 180.f);
+    enemySpawnManager.addRule(EnemyType::Zombie, 1, 0.f, 180.f);
+
+    //Wave 2 : 3 - 7 min Doar zombies
+    enemySpawnManager.addRule(EnemyType::Zombie, 1, 180.f, 420.f);
+
+    //Wave 3 : 7 - 10 min Zombies + Knight Zmbies + 1/0 sa fie flying skull
+    enemySpawnManager.addRule(EnemyType::FlyingSkull, 1, 420.f, 600.f);
+    enemySpawnManager.addRule(EnemyType::KnightZombie, 4, 420.f, 600.f);
+    enemySpawnManager.addRule(EnemyType::Zombie, 5, 420.f, 600.f);
+
+    //Wave 10 - 15 min Flying Skull Knight Zombies
+    enemySpawnManager.addRule(EnemyType::FlyingSkull, 1, 600.f);
+    enemySpawnManager.addRule(EnemyType::KnightZombie, 2, 600.f);
+    //enemySpawnManager.addRule(EnemyType::Zombie, 1, 600.f);
+
+
 
     background = std::make_unique<sf::Sprite>(
         game.getResourceManager().getTexture("background"));
@@ -154,8 +131,7 @@ void GameState::update(const float dt) {
         return;
     }
 
-    if (!bossSpawned && gameTimer >= 900.f) {
-        // 900s = 15 min
+    if (!bossSpawned && enemySpawnManager.shouldSpawnBoss(gameTimer)) {
         bossSpawned = true;
         const float angle = (rand() % 360) * 3.14f / 180.f;
         const float dist = 500.f;
@@ -163,61 +139,28 @@ void GameState::update(const float dt) {
                 player->getPos() +
                 sf::Vector2f(std::cos(angle) * dist, std::sin(angle) * dist);
 
-        enemies.push_back(std::make_unique<BigZombieBoss>(
-            game.getResourceManager().getTexture("boss"), spawnPos, projectiles,
-            game.getResourceManager(), player->getLevel()));
+        auto boss = enemyFactory->createEnemy(EnemyType::BigZombieBoss, spawnPos);
+        if (boss) {
+            enemies.push_back(std::move(boss));
+        }
     }
 
     spawnTimer += dt;
-    float spawnInterval = 3.5f;
+    float spawnInterval = 2.5f;
 
     if (spawnTimer > spawnInterval) {
         spawnTimer = 0;
         const float angle = (rand() % 360) * 3.14f / 180.f;
-        const float dist = 400.f;
+        const float dist = 425.f;
         sf::Vector2f spawnPos =
                 player->getPos() +
                 sf::Vector2f(std::cos(angle) * dist, std::sin(angle) * dist);
 
-        if (gameTimer < 180.f) {
-            // mix de zombie si bats
-            if (rand() % 2 == 0) {
-                enemies.push_back(
-                    std::make_unique<Bat>(game.getResourceManager().getTexture("bat"),
-                                          spawnPos, player->getLevel()));
-            } else {
-                enemies.push_back(std::make_unique<Zombie>(
-                    game.getResourceManager().getTexture("zombie"), spawnPos));
-            }
-        } else if (gameTimer < 420.f) {
-            // doar zombii
-            enemies.push_back(std::make_unique<Zombie>(
-                game.getResourceManager().getTexture("zombie"), spawnPos));
-        } else if (gameTimer < 600.f) {
-            // si knight zombies
-            int enemyType = rand() % 3;
-            if (enemyType == 0) {
-                enemies.push_back(std::make_unique<KnightZombie>(
-                    game.getResourceManager().getTexture("knight_zombie"), spawnPos,
-                    player->getLevel()));
-            } else {
-                enemies.push_back(std::make_unique<Zombie>(
-                    game.getResourceManager().getTexture("zombie"), spawnPos));
-            }
-        } else {
-            // acm si flying skulls
-            int enemyType = rand() % 4;
-            if (enemyType == 0) {
-                enemies.push_back(std::make_unique<Flying_Skull>(
-                    game.getResourceManager().getTexture("spinning_skull"), spawnPos,
-                    projectiles, game.getResourceManager()));
-            } else if (enemyType == 1) {
-                enemies.push_back(std::make_unique<KnightZombie>(
-                    game.getResourceManager().getTexture("knight_zombie"), spawnPos,
-                    player->getLevel()));
-            } else {
-                enemies.push_back(std::make_unique<Zombie>(
-                    game.getResourceManager().getTexture("zombie"), spawnPos));
+        EnemyType type = enemySpawnManager.pickEnemy(gameTimer);
+        if (type != EnemyType::None) {
+            auto enemy = enemyFactory->createEnemy(type, spawnPos);
+            if (enemy) {
+                enemies.push_back(std::move(enemy));
             }
         }
     }
@@ -344,7 +287,6 @@ void GameState::update(const float dt) {
     if (hud && player) {
         hud->update(*player, gameTimer);
     }
-
 }
 
 void GameState::draw() {

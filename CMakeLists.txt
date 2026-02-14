@@ -127,9 +127,11 @@ add_executable(${MAIN_EXECUTABLE_NAME}
         src/UpgradeManagerFactory.cpp
         src/UpgradeManagerFactory.h
         src/PlayerValidation.h
-        src/EnemyWaveFactory.cpp
-        src/EnemyWaveFactory.h
         src/SingletonTemplate.h
+        src/EnemyFactory.cpp
+        src/EnemyFactory.h
+        src/EnemySpawnManager.cpp
+        src/EnemySpawnManager.h
 )
 
 # NOTE: Add all defined targets (e.g. executables, libraries, etc. )

@@ -16,6 +16,9 @@
 #include <ostream>
 #include <vector>
 
+#include "EnemyFactory.h"
+#include "EnemySpawnManager.h"
+
 class GameState : public State {
     std::unique_ptr<Player> player;
     std::unique_ptr<HUD> hud;
@@ -31,8 +34,10 @@ class GameState : public State {
     std::string characterName;
     bool bossSpawned{false};
 
-    float contactDamageCooldown{0.f};
+    EnemySpawnManager enemySpawnManager;
+    std::unique_ptr<EnemyFactory> enemyFactory;
 
+    float contactDamageCooldown{0.f};
 
 public:
     explicit GameState(Game &game);
@@ -49,10 +54,9 @@ public:
 
     void Resize(int w, int h) override;
 
-    //std::vector<Projectile> &getProjectiles();
+    // std::vector<Projectile> &getProjectiles();
 
     friend std::ostream &operator<<(std::ostream &os, const GameState & /*obj*/);
-
 };
 
 #endif // OOP_GAMESTATE_H
